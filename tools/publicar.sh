@@ -6,7 +6,7 @@ APK="${1:?falta la ruta del .apk}"; NOTAS="${2:?faltan las notas}"; OBLIG="${3:-
 AAPT2="${AAPT2:-$(ls -d /c/Users/Alberto/AppData/Local/Android/Sdk/build-tools/*/ | tail -1)aapt2}"
 cd "$(dirname "$0")/.."
 INFO="$("$AAPT2" dump badging "$APK" | head -1)"
-PKG=$(sed -n "s/.*name='\([^']*\)'.*/\1/p" <<<"$INFO")
+PKG=$(sed -n "s/^package: name='\([^']*\)'.*/\1/p" <<<"$INFO")
 CODE=$(sed -n "s/.*versionCode='\([0-9]*\)'.*/\1/p" <<<"$INFO")
 NAME=$(sed -n "s/.*versionName='\([^']*\)'.*/\1/p" <<<"$INFO"); NAME="${NAME%-beta}"
 [ "$PKG" = "cl.mymargineat.app.beta" ] || { echo "paquete inesperado: $PKG"; exit 1; }
