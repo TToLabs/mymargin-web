@@ -3,50 +3,73 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0E14">
 <title>MyMargin — descarga</title>
-<meta name="description" content="MyMargin: lee las ofertas de viaje en tu pantalla, te dice si conviene y audita tus peajes. Descarga para Android.">
+<meta name="description" content="MyMargin te dice si una oferta de viaje conviene y guarda la evidencia para reclamar a Uber. Beta para Android.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <style>
   :root {
-    --bg: #f6f7f9; --card: #ffffff; --text: #14181f; --muted: #5b6573;
-    --line: #e2e6ec; --accent: #0f9d58; --accent-ink: #ffffff;
-    --warn-bg: #fff6e0; --warn-ink: #6b4a00;
+    --bg: #0A0E14; --s1: #12141A; --s2: #1B1E27; --line: #2E3340;
+    --text: #D0CBC1; --muted: #9BA1B0;
+    --gold: #F2B945; --green: #4FAE7C; --orange: #FF7A29; --red: #E0705F;
   }
-  @media (prefers-color-scheme: dark) {
+  @media (prefers-color-scheme: light) {
     :root {
-      --bg: #0e1116; --card: #171b22; --text: #eef1f5; --muted: #98a2b3;
-      --line: #262c36; --accent: #2bbf78; --accent-ink: #06210f;
-      --warn-bg: #2a2410; --warn-ink: #f3d98a;
+      --bg: #F5F3EE; --s1: #FFFFFF; --s2: #ECE9E1; --line: #D8D3C7;
+      --text: #1C1F26; --muted: #5E6470; --gold: #9A6A00; --green: #2F7F55;
     }
   }
   * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0; background: var(--bg); color: var(--text);
-    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font: 16px/1.6 "Work Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
   }
-  main { max-width: 640px; margin: 0 auto; padding: 32px 16px 56px; }
-  h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -.01em; }
-  .sub { color: var(--muted); margin: 0 0 24px; }
-  .card {
-    background: var(--card); border: 1px solid var(--line);
-    border-radius: 14px; padding: 20px; margin-bottom: 16px;
+  /* El borde de la pantalla: la idea de la app, hecha página. */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 10;
+    border: 4px solid transparent;
+    border-image: linear-gradient(90deg, var(--red), var(--orange), var(--gold), var(--green)) 1;
+    opacity: .85;
   }
-  .btn {
-    display: block; width: 100%; text-align: center; text-decoration: none;
-    background: var(--accent); color: var(--accent-ink); font-weight: 700;
-    padding: 15px 18px; border-radius: 12px; font-size: 17px;
-  }
-  .ver { color: var(--muted); font-size: 14px; margin: 10px 0 0; text-align: center; min-height: 1.4em; }
+  main { max-width: 640px; margin: 0 auto; padding: 36px 16px 56px; }
+  .marca { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  .marca img { width: 60px; height: 60px; border-radius: 14px; flex: none; }
+  h1 { font-size: 32px; line-height: 1.1; margin: 0; letter-spacing: -.02em; }
+  h1 span { color: var(--gold); }
+  .beta { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .08em;
+    color: var(--bg); background: var(--orange); border-radius: 6px; padding: 2px 7px;
+    vertical-align: middle; margin-left: 6px; }
+  .lead { color: var(--muted); margin: 6px 0 24px; font-size: 17px; }
+  .card { background: var(--s1); border: 1px solid var(--line); border-radius: 16px;
+    padding: 20px; margin-bottom: 14px; }
+  .btn { display: block; width: 100%; text-align: center; text-decoration: none;
+    background: var(--gold); color: #0A0E14; font-weight: 700; font-size: 17px;
+    padding: 16px 18px; border-radius: 12px; }
+  .btn:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+  .ver { color: var(--muted); font-size: 14px; margin: 12px 0 0; text-align: center; min-height: 1.4em; }
+  .notas { color: var(--text); font-size: 14.5px; margin: 10px 0 0; text-align: center; }
   h2 { font-size: 18px; margin: 0 0 10px; }
-  ol { margin: 0; padding-left: 22px; } li { margin-bottom: 6px; }
-  .aviso { background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: 12px 14px; font-size: 14.5px; }
-  .notas { color: var(--muted); font-size: 14.5px; margin: 12px 0 0; }
-  footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 28px; }
+  ol, ul { margin: 0; padding-left: 22px; } li { margin-bottom: 7px; }
+  .semaforo { display: flex; gap: 8px; margin: 0 0 14px; }
+  .semaforo i { flex: 1; height: 8px; border-radius: 4px; }
+  .g { background: var(--green); } .o { background: var(--orange); } .r { background: var(--red); }
+  .nota { color: var(--muted); font-size: 14px; margin: 0; }
+  details { border-top: 1px solid var(--line); padding: 10px 0; }
+  details:first-of-type { border-top: 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { margin: 8px 0 0; color: var(--muted); font-size: 14.5px; }
+  footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 26px; }
 </style>
 </head>
 <body>
 <main>
-  <h1>MyMargin</h1>
-  <p class="sub">Lee las ofertas de viaje en tu pantalla, te dice si conviene y audita que te paguen lo que corresponde. Para Android.</p>
+  <div class="marca">
+    <img src="icon.svg" alt="" width="60" height="60">
+    <h1>My<span>Margin</span><span class="beta">BETA</span></h1>
+  </div>
+  <p class="lead">Te dice si una oferta de viaje conviene y guarda la evidencia de cada viaje para reclamarle a Uber lo que falte. Android 13 o superior.</p>
 
   <div class="card">
     <a class="btn" id="btnApk" href="https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk">Descargar MyMargin (APK)</a>
@@ -55,26 +78,43 @@
   </div>
 
   <div class="card">
-    <h2>Cómo instalar</h2>
-    <ol>
-      <li>Toca <b>Descargar</b> y abre el archivo cuando termine.</li>
-      <li>Si Android lo pide, activa <b>Permitir de esta fuente</b> para tu navegador.</li>
-      <li>Abre MyMargin y sigue la bienvenida: te pedirá los permisos de pantalla y notificaciones.</li>
-    </ol>
+    <h2>Cómo funciona</h2>
+    <div class="semaforo" aria-hidden="true"><i class="g"></i><i class="o"></i><i class="r"></i></div>
+    <ul>
+      <li>Lee el monto, los minutos y los kilómetros de la tarjeta de oferta y pinta el borde de la pantalla: <b style="color:var(--green)">verde</b> conviene, <b style="color:var(--orange)">naranja</b> límite, <b style="color:var(--red)">rojo</b> no.</li>
+      <li>Guarda una foto de la oferta que aceptaste, con hora, dirección, duración y montos.</li>
+      <li>Al terminar el turno compara con lo que Uber declara haber pagado y detecta un pago que falte.</li>
+      <li>Trae tus peajes desde cada concesionaria, con tu propia cuenta.</li>
+    </ul>
+    <p class="nota" style="margin-top:12px">Hoy funciona con Uber. DiDi y Cabify están en preparación.</p>
   </div>
 
   <div class="card">
-    <h2>Actualizaciones</h2>
-    <p style="margin:0">Una vez instalada, la app avisa sola con un mensaje cuando hay una versión nueva y la instala sin que tengas que volver a esta página.</p>
+    <h2>Cómo instalar</h2>
+    <ol>
+      <li>Toca <b>Descargar</b> y abre el archivo al terminar.</li>
+      <li>Si Android lo pide, activa <b>Permitir de esta fuente</b> para tu navegador.</li>
+      <li>Abre MyMargin y sigue la bienvenida: ahí se explica cada permiso.</li>
+    </ol>
+    <p class="nota" style="margin-top:12px">Ya instalada, la app avisa sola con un mensaje cuando hay una versión nueva y la instala sin volver a esta página.</p>
   </div>
 
-  <p class="aviso">MyMargin funciona solo en el teléfono: no existe versión web de la app, porque lee tu pantalla localmente. Esta página es únicamente para descargarla.</p>
+  <div class="card">
+    <h2>Privacidad y permisos</h2>
+    <details open><summary>Qué se guarda</summary>
+      <p>Solo lo que sirve para probar un viaje. No se guarda la pantalla del código PIN ni tus conversaciones con el pasajero. Las pruebas se borran dos semanas después de conciliadas, y puedes borrar cualquier viaje desde su ficha.</p></details>
+    <details><summary>Dónde quedan las capturas</summary>
+      <p>En tu teléfono. No se suben a ningún servidor: tú decides cuáles compartir y cuándo. La lectura de la pantalla (OCR) ocurre en el propio teléfono.</p></details>
+    <details><summary>Cuándo se conecta a internet</summary>
+      <p>Para revisar y descargar actualizaciones desde esta página, y para entrar a drivers.uber.com y a cada autopista con tu propia cuenta. Nada más.</p></details>
+    <details><summary>Permisos que pide</summary>
+      <p>Mostrarse sobre otras apps (el borde), captura de pantalla, ubicación (pórticos de autopista), notificaciones, ignorar la optimización de batería, accesibilidad solo para traer Uber al frente cuando llega su notificación, e instalar actualizaciones.</p></details>
+  </div>
 
-  <footer>TToLabs Soluciones Tecnológicas</footer>
+  <footer>TToLabs Soluciones Tecnológicas · versión beta de pruebas en terreno</footer>
 </main>
 <script>
-  // Muestra la versión publicada leyendo el mismo version.json que consulta la app.
-  // Si falla (sin red, bloqueo), la página sigue funcionando: el botón ya trae el link.
+  // Lee el mismo version.json que consulta la app. Si falla, el botón ya trae el link.
   (function () {
     try {
       fetch("version.json", { cache: "no-store" })
