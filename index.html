@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyMargin — descarga</title>
+<meta name="description" content="MyMargin: lee las ofertas de viaje en tu pantalla, te dice si conviene y audita tus peajes. Descarga para Android.">
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #14181f; --muted: #5b6573;
+    --line: #e2e6ec; --accent: #0f9d58; --accent-ink: #ffffff;
+    --warn-bg: #fff6e0; --warn-ink: #6b4a00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1116; --card: #171b22; --text: #eef1f5; --muted: #98a2b3;
+      --line: #262c36; --accent: #2bbf78; --accent-ink: #06210f;
+      --warn-bg: #2a2410; --warn-ink: #f3d98a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 32px 16px 56px; }
+  h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 24px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 20px; margin-bottom: 16px;
+  }
+  .btn {
+    display: block; width: 100%; text-align: center; text-decoration: none;
+    background: var(--accent); color: var(--accent-ink); font-weight: 700;
+    padding: 15px 18px; border-radius: 12px; font-size: 17px;
+  }
+  .ver { color: var(--muted); font-size: 14px; margin: 10px 0 0; text-align: center; min-height: 1.4em; }
+  h2 { font-size: 18px; margin: 0 0 10px; }
+  ol { margin: 0; padding-left: 22px; } li { margin-bottom: 6px; }
+  .aviso { background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: 12px 14px; font-size: 14.5px; }
+  .notas { color: var(--muted); font-size: 14.5px; margin: 12px 0 0; }
+  footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 28px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>MyMargin</h1>
+  <p class="sub">Lee las ofertas de viaje en tu pantalla, te dice si conviene y audita que te paguen lo que corresponde. Para Android.</p>
+
+  <div class="card">
+    <a class="btn" id="btnApk" href="https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk">Descargar MyMargin (APK)</a>
+    <p class="ver" id="ver">&nbsp;</p>
+    <p class="notas" id="notas"></p>
+  </div>
+
+  <div class="card">
+    <h2>Cómo instalar</h2>
+    <ol>
+      <li>Toca <b>Descargar</b> y abre el archivo cuando termine.</li>
+      <li>Si Android lo pide, activa <b>Permitir de esta fuente</b> para tu navegador.</li>
+      <li>Abre MyMargin y sigue la bienvenida: te pedirá los permisos de pantalla y notificaciones.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Actualizaciones</h2>
+    <p style="margin:0">Una vez instalada, la app avisa sola con un mensaje cuando hay una versión nueva y la instala sin que tengas que volver a esta página.</p>
+  </div>
+
+  <p class="aviso">MyMargin funciona solo en el teléfono: no existe versión web de la app, porque lee tu pantalla localmente. Esta página es únicamente para descargarla.</p>
+
+  <footer>TToLabs Soluciones Tecnológicas</footer>
+</main>
+<script>
+  // Muestra la versión publicada leyendo el mismo version.json que consulta la app.
+  // Si falla (sin red, bloqueo), la página sigue funcionando: el botón ya trae el link.
+  (function () {
+    try {
+      fetch("version.json", { cache: "no-store" })
+        .then(function (r) { return r.json(); })
+        .then(function (v) {
+          document.getElementById("ver").textContent = "Versión " + v.versionName;
+          if (v.notas) document.getElementById("notas").textContent = v.notas;
+        })
+        .catch(function () {});
+    } catch (e) {}
+  })();
+</script>
+</body>
+</html>

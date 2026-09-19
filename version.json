@@ -1,0 +1,7 @@
+{
+  "versionCode": 133,
+  "versionName": "0.79.0",
+  "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
+  "notas": "Ahora la app avisa cuando hay una versión nueva. Corrige la lectura de montos altos ($11.000 o más) que el OCR confundía.",
+  "obligatoria": false
+}
