@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyMargin · réplica web</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Colores tal como están en MainActivity.kt (TXT/DIM/DIM2 de MainActivity son más claros
+   que los de Bienvenida/AutopistasActivity; se respeta cada pantalla con los suyos). */
+:root{
+  --bg:#12141A; --surface:#1B1E27; --surface2:#242835; --line:#2E3340;
+  --txt:#E3DFD6; --titulo:#C0C9D8; --dim:#B4BBC9; --dim2:#A2ABBC;
+  --brand:#F2B945; --brand-dim:#C9973A; --brand-wash:#2A2113; --sobre:#151107;
+  --info:#5B8FD6; --bueno:#4FAE7C; --malo:#E0705F; --medio:#C97A32;
+  /* Bienvenida / Mis autopistas / Historial de Uber */
+  --txt-b:#D0CBC1; --dim-b:#9BA1B0; --dim2-b:#8A93A6;
+  --mono: ui-monospace, "Roboto Mono", "Droid Sans Mono", Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0a0b0e;color:var(--txt);font-family:"Work Sans",sans-serif}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.banner{width:100%;background:var(--brand);color:var(--sobre);font:700 13px/1.3 "Work Sans",sans-serif;text-align:center;padding:6px 16px}
+.banner a{color:var(--sobre)}
+.phone{position:relative;width:412px;max-width:100%;height:calc(100vh - 44px);max-height:915px;margin:10px 0;background:var(--bg);border:1px solid #333;border-radius:28px;overflow:hidden;display:flex;flex-direction:column}
+@media (max-width:480px){.phone{width:100%;height:calc(100vh - 30px);max-height:none;margin:0;border:0;border-radius:0}}
+.pila{flex:1;position:relative;overflow:hidden}
+.pantalla{position:absolute;inset:0;overflow-y:auto;background:var(--bg);display:none;scrollbar-width:thin}
+.pantalla.on{display:block}
+.cuerpo{padding:28px 20px}
+.mono{font-family:var(--mono)}
+.b{font-weight:700}
+.dim{color:var(--dim)} .dim2{color:var(--dim2)}
+/* barra inferior */
+.barra{display:flex;background:var(--surface);padding:9px 0 11px}
+.barra button{flex:1;min-height:48px;background:none;border:0;color:var(--dim2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-family:"Work Sans",sans-serif}
+.barra .ic{font:19px Roboto,"Segoe UI Symbol","Noto Sans Symbols 2",sans-serif;line-height:1.2}
+.barra .nm{font-size:11px}
+.barra button.on{color:var(--brand)} .barra button.on .nm{font-weight:700}
+/* piezas */
+.tituloP{font-size:29px;font-weight:700;color:var(--titulo)}
+.tarjeta{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.pad{padding:14px 16px 16px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:13px 16px;font:700 20px "Work Sans",sans-serif;color:var(--sobre);background:var(--brand);cursor:pointer;min-height:48px}
+.btn.s2{background:var(--surface2);color:var(--txt)}
+.btn.malo{background:var(--malo)}
+.btn.ok{background:var(--bueno)}
+.fila{display:flex;padding:3px 0;font-size:18.5px}
+.fila .i{flex:1;color:var(--dim)} .fila .d{font-family:var(--mono)}
+.rotG{font:700 16px "Work Sans";color:var(--dim2);letter-spacing:.1em;padding:0 4px 8px;margin-top:22px}
+.colap{margin-top:12px}
+.colap>button{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font:700 20px "Work Sans";color:var(--titulo);cursor:pointer}
+.colap>.cont{margin-top:6px;display:none}
+.colap.abierto>.cont{display:block}
+.acento{margin-top:12px}
+.acento .cab{display:flex;align-items:center;border-radius:12px;padding:12px 14px;cursor:pointer}
+.acento .franja{width:4px;height:30px;border-radius:2px;margin-right:12px;flex:none}
+.acento .tt{font:700 17px "Work Sans";letter-spacing:.08em}
+.acento .rs{font-size:16.5px;color:var(--dim2);padding-top:3px}
+.acento .fl{font-size:20px;padding-left:10px}
+.acento .cont{margin-top:6px;display:none}
+.acento.abierto .cont{display:block}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none}
+.chip{flex:none;min-height:40px;padding:9px 12px;border-radius:14px;background:var(--surface2);color:var(--dim);font-size:16.5px;border:0;cursor:pointer;font-family:"Work Sans"}
+.chip.on{background:var(--brand);color:var(--sobre);font-weight:700}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;border:0;border-radius:12px;padding:10px 8px;font:700 19px "Work Sans";background:var(--surface2);color:var(--txt);cursor:pointer}
+.seg button.on{background:var(--brand);color:var(--sobre)}
+.viaje{background:var(--surface2);border-radius:12px;padding:10px 14px;margin-top:8px;cursor:pointer}
+.viaje:active{filter:brightness(1.15)}
+.lbl{font:700 16px "Work Sans";color:var(--dim);letter-spacing:.06em}
+.inp{width:100%;background:var(--surface2);border:0;border-radius:10px;padding:10px 12px;color:var(--txt);font:21px var(--mono);margin-top:4px}
+/* toast */
+.toast{position:absolute;left:50%;bottom:90px;transform:translateX(-50%);background:#3a3d45;color:#fff;padding:10px 16px;border-radius:22px;font-size:15px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;white-space:nowrap}
+.toast.on{opacity:1}
+/* diálogo */
+.velo{position:absolute;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:40;padding:24px}
+.velo.on{display:flex}
+.dlg{background:#2b2e37;border-radius:24px;padding:22px 22px 12px;width:100%;max-height:90%;overflow:auto}
+.dlg h3{font-size:22px;color:var(--txt);margin-bottom:12px}
+.dlg p{font-size:16px;color:var(--dim);line-height:1.4;white-space:pre-line}
+.dlg .acc{display:flex;justify-content:flex-end;gap:6px;margin-top:14px;flex-wrap:wrap}
+.dlg .acc button{background:none;border:0;color:var(--brand);font:700 16px "Work Sans";padding:10px 12px;cursor:pointer}
+/* borde overlay */
+.bordeOv{position:absolute;inset:0;pointer-events:none;z-index:30;border:0 solid transparent;border-radius:28px;transition:border-width .2s}
+@media (max-width:480px){.bordeOv{border-radius:0}}
+.etiqOv{position:absolute;top:48px;left:50%;transform:translateX(-50%);z-index:31;background:rgba(0,0,0,.85);color:#fff;font:700 19px "Work Sans";padding:12px 18px;border-radius:13px;border:9px solid;display:none;white-space:nowrap}
+/* sub-pantallas (Activities) */
+.sub{position:absolute;inset:0;background:var(--bg);z-index:20;overflow-y:auto;display:none}
+.sub.on{display:block}
+.volver{position:sticky;top:0;background:var(--bg);padding:10px 16px 0;z-index:2}
+.volver button{background:none;border:0;color:var(--dim-b);font-size:16px;cursor:pointer;font-family:"Work Sans"}
+</style>
+</head>
+<body>
+<div class="banner">Réplica web de MyMargin v0.79.0 (datos de ejemplo) · <a href="../">volver</a></div>
+
+<div class="phone" id="phone">
+  <div class="pila" id="pila"></div>
+  <nav class="barra" id="barra"></nav>
+  <div class="bordeOv" id="bordeOv"></div>
+  <div class="etiqOv" id="etiqOv"></div>
+  <div class="velo" id="velo"><div class="dlg" id="dlg"></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ---------- almacenamiento local SIEMPRE envuelto (regla: nunca directo) ---------- */
+function leerLocal(k){ try{ return window.localStorage.getItem(k); }catch(e){ return null; } }
+function guardarLocal(k,v){ try{ window.localStorage.setItem(k,v); }catch(e){} }
+
+/* ---------- utilidades ---------- */
+var C={bg:'#12141A',surface:'#1B1E27',surface2:'#242835',line:'#2E3340',txt:'#E3DFD6',titulo:'#C0C9D8',
+  dim:'#B4BBC9',dim2:'#A2ABBC',brand:'#F2B945',brandDim:'#C9973A',info:'#5B8FD6',bueno:'#4FAE7C',malo:'#E0705F',medio:'#C97A32'};
+function clp(n){ var s=Math.round(Math.abs(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.'); return (n<0?'-$':'$')+s; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function tinte(hex,a){ var r=parseInt(hex.substr(1,2),16),g=parseInt(hex.substr(3,2),16),b=parseInt(hex.substr(5,2),16); return 'rgba('+r+','+g+','+b+','+(a/255).toFixed(3)+')'; }
+var toastT;
+function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg||'Solo en la app Android'; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(function(){t.classList.remove('on');},2200); }
+function nativo(){ toast('Solo en la app Android'); }
+function dialogo(titulo,cuerpoHtml,botones){
+  var d=document.getElementById('dlg');
+  d.innerHTML='<h3>'+esc(titulo)+'</h3>'+cuerpoHtml+'<div class="acc"></div>';
+  var acc=d.querySelector('.acc');
+  (botones||[['Cerrar',null]]).forEach(function(b){ var x=document.createElement('button'); x.textContent=b[0];
+    x.onclick=function(){ cerrarDlg(); if(b[1]) b[1](); }; acc.appendChild(x); });
+  document.getElementById('velo').classList.add('on');
+}
+function cerrarDlg(){ document.getElementById('velo').classList.remove('on'); }
+document.getElementById('velo').addEventListener('click',function(e){ if(e.target.id==='velo') cerrarDlg(); });
+
+function fila(i,d,color){ return '<div class="fila"><span class="i">'+esc(i)+'</span><span class="d" style="color:'+(color||C.txt)+'">'+esc(d)+'</span></div>'; }
+function colapsable(rotulo,contenido){
+  return '<div class="colap"><button data-r="'+esc(rotulo)+'" onclick="togColap(this)">'+esc(rotulo)+'   ▾</button><div class="cont">'+contenido+'</div></div>';
+}
+function togColap(b){ var w=b.parentNode; var ab=w.classList.toggle('abierto'); b.textContent=b.getAttribute('data-r')+'   '+(ab?'▴':'▾'); }
+function seccionAcento(titulo,resumen,acento,contenido,abierta){
+  return '<div class="acento'+(abierta?' abierto':'')+'"><div class="cab" onclick="togAcento(this)" style="background:'+tinte(acento,28)+';border:1px solid '+tinte(acento,90)+'">'+
+    '<div class="franja" style="background:'+acento+'"></div><div style="flex:1"><div class="tt" style="color:'+acento+'">'+esc(titulo)+'</div>'+
+    (resumen?'<div class="rs">'+esc(resumen)+'</div>':'')+'</div><div class="fl" style="color:'+acento+'">'+(abierta?'▾':'▸')+'</div></div><div class="cont">'+contenido+'</div></div>';
+}
+function togAcento(cab){ var w=cab.parentNode; var ab=w.classList.toggle('abierto'); cab.querySelector('.fl').textContent=ab?'▾':'▸'; }
+function togSig(el,rotCerrado,rotAbierto){ var d=el.nextElementSibling; var ab=d.style.display==='block'; d.style.display=ab?'none':'block'; if(rotCerrado) el.innerHTML=ab?rotCerrado:rotAbierto; }
+
+/* ---------- datos de ejemplo (inventados) ---------- */
+var APP='UBER', PERIODO='HOY', SEMANA=0, FILTRO_AUT=null, FILTRO_AL=null;
+var VIAJES=[
+  {d:'vie 19',h:'23:42',asig:'23:36',fin:'00:04',com:'Providencia',bruto:6850,real:6850,liq:4480,km:9.4,min:22,nivel:'BUENO',modo:'MINUTO',conf:true,peajes:2},
+  {d:'vie 19',h:'22:58',asig:'22:51',fin:'23:21',com:'Las Condes',bruto:7420,real:6910,liq:4190,km:12.1,min:23,nivel:'MEDIO',modo:'MINUTO',conf:true,peajes:3,foto:true},
+  {d:'vie 19',h:'22:10',asig:'22:05',fin:'22:28',com:'Ñuñoa',bruto:4980,real:null,liq:3350,km:6.2,min:18,nivel:'BUENO',modo:'MINUTO',conf:true,peajes:0},
+  {d:'vie 19',h:'21:31',asig:'21:26',fin:'21:44',com:'Santiago',bruto:3120,real:3120,liq:1890,km:5.8,min:13,nivel:'MALO',modo:'MINUTO',conf:false,peajes:0},
+  {d:'vie 19',h:'21:02',asig:'',fin:'',com:'Vitacura',bruto:0,real:5640,liq:3900,km:0,min:0,nivel:'RECUPERADO',modo:'MINUTO',conf:null,peajes:0}
+];
+var ALERTAS=[
+  {dias:1,fecha:'17 sept 2026 · 23:15',port:3,aut:'Costanera Norte + Vespucio Sur',cobro:2946,abono:1180,reclamado:null,
+   cruces:[['23:21','P6 Kennedy','Costanera Norte',1104],['23:29','P3 La Florida','Vespucio Sur',921],['23:34','P5 Macul','Vespucio Sur',921]]},
+  {dias:4,fecha:'14 sept 2026 · 01:08',port:2,aut:'Vespucio Norte',cobro:1780,abono:0,reclamado:null,
+   cruces:[['01:14','PA2 Quilicura','Vespucio Norte',890],['01:19','PA4 Renca','Vespucio Norte',890]]},
+  {dias:8,fecha:'11 sept 2026 · 22:40',port:1,aut:'Américo Vespucio Oriente',cobro:1210,abono:600,reclamado:'12 sept',
+   cruces:[['22:52','Pórtico Príncipe de Gales','Américo Vespucio Oriente',1210]]}
+];
+var TRANSITOS=[
+  ['19 sept','23:48','P6 Kennedy','Costanera Norte',1104,true],
+  ['19 sept','23:55','P2 Tobalaba','Costanera Norte',860,false],
+  ['19 sept','23:05','P3 La Florida','Vespucio Sur',921,true],
+  ['19 sept','23:11','P5 Macul','Vespucio Sur',921,true],
+  ['19 sept','23:16','Pórtico Príncipe de Gales','Américo Vespucio Oriente',1210,false],
+  ['18 sept','20:02','PA2 Quilicura','Vespucio Norte',890,true],
+  ['18 sept','20:07','PA4 Renca','Vespucio Norte',890,true]
+];
+
+/* ---------- pestañas ---------- */
+var PESTANAS=[['⌂','Inicio'],['≡','Viajes'],['⚠','Alertas'],['⚖','Auditoría'],['ᯤ','TAG'],['⚙','Ajustes']];
+var pila=document.getElementById('pila'), barra=document.getElementById('barra');
+PESTANAS.forEach(function(p,i){
+  var s=document.createElement('div'); s.className='pantalla'; s.id='p'+i; pila.appendChild(s);
+  var b=document.createElement('button'); b.innerHTML='<span class="ic">'+p[0]+'</span><span class="nm">'+p[1]+'</span>';
+  b.onclick=function(){ irAPestana(i); }; barra.appendChild(b);
+});
+function irAPestana(i){
+  document.querySelectorAll('.pantalla').forEach(function(s,n){ s.classList.toggle('on',n===i); });
+  barra.querySelectorAll('button').forEach(function(b,n){ b.classList.toggle('on',n===i); });
+  [pintarInicio,pintarViajes,pintarAlertas,pintarAuditoria,pintarTag,pintarAjustes][i]();
+  document.getElementById('p'+i).scrollTop=0;
+  guardarLocal('mm_pestana',String(i));
+}
+function nombreApp(){ return APP==='DIDI'?'DiDi':APP==='CABIFY'?'Cabify':'Uber'; }
+
+/* ---------- INICIO ---------- */
+var ENCENDIDO=false;
+function pintarInicio(){
+  var marcas=[['UBER','Uber','#000000','900'],['DIDI','DiDi','#FF7A29','700'],['CABIFY','Cabify','#653CAD','700']];
+  var sel='<div style="display:flex;gap:8px;margin-top:16px">'+marcas.map(function(m){
+    var act=m[0]===APP; var tinta=act?(m[0]==='DIDI'?'#151107':C.txt):C.txt;
+    return '<div onclick="APP=\''+m[0]+'\';pintarInicio()" style="flex:1;cursor:pointer;text-align:center;border-radius:14px;padding:11px 4px 9px;opacity:'+(act?1:.9)+';background:'+(act?m[2]:C.surface2)+';border:2px solid '+(act?C.txt:m[2])+'">'+
+      '<div style="font:'+m[3]+' 22px Roboto,Arial,sans-serif;color:'+tinta+'">'+m[1]+'</div><div style="font-size:15.5px;padding-top:1px;color:'+(act?tinta:C.dim)+'">'+(act?'● Activa':'Tocar')+'</div></div>';
+  }).join('')+'</div>';
+  var n=APP==='UBER'?4:0;
+  var dash='<div class="tarjeta pad" style="margin-top:10px"><div class="b" style="font-size:16px;color:'+C.dim+';letter-spacing:.08em">HOY · '+nombreApp()+' · '+n+' viaje'+(n===1?'':'s')+'</div>'+
+    '<div style="display:flex;padding:4px 0 10px">'+
+    ['BRUTO|'+clp(n?22370:0)+'|Uber','LÍQUIDA|'+clp(n?13910:0)+'|te queda'].map(function(x){x=x.split('|');
+      return '<div style="flex:1"><div class="b" style="font-size:15px;color:'+C.dim+';letter-spacing:.1em">'+x[0]+'</div><div class="mono" style="font-size:26px;color:'+C.txt+'">'+x[1]+'</div><div style="font-size:15.5px;color:'+C.dim+'">'+x[2]+'</div></div>';}).join('')+
+    '</div>'+fila('$ por hora',clp(n?10840:0)+'/h',C.brand)+fila('Confirmados por Uber',(n?3:0)+'/'+n,n?C.dim:C.txt)+'</div>';
+  document.getElementById('p0').innerHTML='<div class="cuerpo">'+
+    '<div class="b" style="font-size:31px;color:'+C.txt+'">MyMargin</div><div style="font-size:18px;color:'+C.dim+'">Auditor de viajes</div>'+
+    sel+dash+
+    '<button class="btn '+(ENCENDIDO?'ok':'')+'" style="margin-top:14px" onclick="ENCENDIDO=!ENCENDIDO;pintarInicio();toast(ENCENDIDO?\'Simulado: en el teléfono pide 2 permisos\':\'Apagado\')">'+(ENCENDIDO?'● Encendido — tocar para apagar':'Encender Auditor')+'</button>'+
+    '<div style="font-size:17.5px;color:'+C.dim+';margin-top:8px">Un toque y listo: enciende el borde de color y la lectura de la app seleccionada arriba. Pedirá 2 permisos la primera vez (superposición y grabar pantalla).</div>'+
+    '<button onclick="nativo()" style="margin-top:14px;width:100%;min-height:50px;background:transparent;border:1px solid '+C.brand+';border-radius:12px;color:'+C.brand+';font:700 20px Work Sans;cursor:pointer">⟳  Sincronizar</button>'+
+    '<div style="font-size:17px;color:'+C.dim+';margin-top:5px">Trae tus peajes de todas las autopistas y te deja en Ganancias de Uber.</div>'+
+    '<div class="tarjeta pad" style="margin-top:22px;border-style:dashed"><div class="lbl" style="letter-spacing:.1em">DEMO DE LA RÉPLICA (no existe en la app)</div>'+
+    '<div style="font-size:16px;color:'+C.dim2+';margin:6px 0 10px">Así se ve el borde de color que pinta OverlayService sobre la app de Uber al leer una oferta.</div>'+
+    '<div class="seg"><button style="background:#39FF14;color:#111" onclick="demoBorde(\'BUENO\')">Verde</button><button style="background:#FF9500;color:#111" onclick="demoBorde(\'MEDIO\')">Naranjo</button><button style="background:#FF1744;color:#fff" onclick="demoBorde(\'MALO\')">Rojo</button></div>'+
+    '<button class="btn s2" style="margin-top:10px;font-size:17px" onclick="abrirSub(\'bienvenida\')">Ver la Bienvenida (primer arranque)</button></div>'+
+    '</div>';
+}
+var bordeT;
+function demoBorde(n){
+  var col={BUENO:'#39FF14',MEDIO:'#FF9500',MALO:'#FF1744'}[n];
+  var txt={BUENO:'ACÉPTALO · $312/min',MEDIO:'REGULAR · $228/min',MALO:'DÉJALO PASAR · $141/min'}[n];
+  var b=document.getElementById('bordeOv'), e=document.getElementById('etiqOv');
+  b.style.borderColor=col; b.style.borderWidth='12px'; e.style.borderColor=col; e.textContent=txt; e.style.display='block';
+  clearTimeout(bordeT); bordeT=setTimeout(function(){ b.style.borderWidth='0'; e.style.display='none'; },4000);
+}
+
+/* ---------- VIAJES ---------- */
+function filaViaje(v,i){
+  var color={BUENO:C.bueno,MEDIO:C.medio,RECUPERADO:C.dim,INDETERMINADO:C.dim}[v.nivel]||C.malo;
+  var marca=v.conf===true?'✓ ':v.conf===false?'? ':'';
+  var rec=v.nivel==='RECUPERADO';
+  var hor=(v.asig?'asignado '+v.asig+' · ':'')+'inicio '+v.h+(v.min>0?' · fin '+v.fin:'')+(v.peajes>0?' · '+v.peajes+' peaje(s)':'');
+  var ruta=rec?'sin datos de ruta — monto tomado de Uber':(String(v.km)+' km · '+v.min+' min · '+Math.round(v.bruto/v.min)+'/min · '+clp(v.bruto/v.min*60)+'/h');
+  var modo=rec?'recuperado (la app no vio este viaje)':'validado por MINUTO';
+  var est,estC;
+  if(v.real==null){ est='≈ estimado de la oferta — tocá para corregir'; estC=C.dim; }
+  else if(rec||v.real===v.bruto){ est='✓ pagaron lo ofertado'; estC=C.bueno; }
+  else if(v.real<v.bruto){ est='⚠ te pagaron '+clp(v.bruto-v.real)+' MENOS de lo ofertado ('+Math.round((v.real-v.bruto)/v.bruto*100)+'%)'; estC=C.malo; }
+  else { est='↑ pagaron '+clp(v.real-v.bruto)+' más que la oferta'; estC=C.bueno; }
+  return '<div class="viaje" onclick="fichaViaje('+i+')">'+fila(marca+v.d+' · '+v.h,v.com,C.txt)+
+    '<div style="font-size:16px;color:'+C.dim+';padding-top:2px">'+hor+'</div>'+
+    fila(clp(rec?v.real:v.bruto)+(v.real!=null&&!rec?'  (real '+clp(v.real)+')':''),'líq '+clp(v.liq),color)+
+    (v.foto?'<div style="font-size:18px;color:'+C.brand+';padding:6px 0 2px" onclick="event.stopPropagation();verOferta('+i+')">📷  Ver la oferta que me mostraron</div>':'')+
+    '<div class="mono" style="font-size:17.5px;color:'+C.dim+';padding-top:2px">'+ruta+'</div>'+
+    '<div style="font-size:16.5px;color:'+C.brand+';padding-top:2px">⏱ '+modo+'</div>'+
+    '<div style="font-size:16.5px;color:'+estC+';padding-top:2px">'+est+'</div></div>';
+}
+function tarjetaResumen(nombre,n,liq,bruto){
+  return '<div class="tarjeta" style="padding:12px 16px 14px"><div class="b" style="font-size:16px;color:'+C.dim+';letter-spacing:.08em">'+nombre+' · '+n+' viaje'+(n===1?'':'s')+'</div>'+
+  '<div class="mono" style="font-size:33px">'+clp(liq)+'</div>'+fila('Bruto',clp(bruto))+fila('Descuento SII','−'+clp(bruto*.1525).slice(1),C.malo)+
+  fila('Bencina','−'+clp(bruto*.12).slice(1),C.malo)+fila('$ por hora',clp(10840)+'/h',C.brand)+
+  (n?'<div style="font-size:16.5px;color:'+C.dim+';padding-top:4px">✓ '+(n-1)+' confirmados · ≈ 1 estimado de la oferta</div>':'')+
+  (n?fila('Validación',n+' min',C.brand):'')+'</div>';
+}
+function pintarViajes(){
+  var nom=nombreApp(); var h='<div class="cuerpo"><div class="tituloP">Viajes</div><div class="seg" style="margin:14px 0 4px">'+
+    [['HOY','Hoy'],['SEMANA','Semana'],['MES','Mes']].map(function(p){return '<button class="'+(PERIODO===p[0]?'on':'')+'" onclick="PERIODO=\''+p[0]+'\';pintarViajes()">'+p[1]+'</button>';}).join('')+'</div>';
+  if(APP!=='UBER'){
+    h+=tarjetaResumen((PERIODO==='HOY'?'HOY':PERIODO==='SEMANA'?'ESTA SEMANA':'ESTE MES')+' · '+nom,0,0,0)+
+    '<div style="font-size:18px;color:'+C.dim+';padding-top:8px">'+(PERIODO==='HOY'?'Sin viajes de '+nom+' hoy todavía. Cuando aceptes una oferta, se guardará sola aquí.':PERIODO==='SEMANA'?'Sin viajes de '+nom+' esta semana.':'Sin viajes de '+nom+' este mes.')+'</div></div>';
+    document.getElementById('p1').innerHTML=h; return;
+  }
+  if(PERIODO==='HOY'){
+    h+=tarjetaResumen('HOY · '+nom,VIAJES.length,17810,27990);
+    h+='<div class="b" style="font-size:16px;color:'+C.dim+';letter-spacing:.06em;padding:12px 0 2px">'+VIAJES.length+' viajes</div>';
+    VIAJES.forEach(function(v,i){ h+=filaViaje(v,i); });
+  } else {
+    h+=tarjetaResumen(PERIODO==='SEMANA'?'ESTA SEMANA · '+nom:'ESTE MES · '+nom,PERIODO==='SEMANA'?23:96,PERIODO==='SEMANA'?81240:338900,PERIODO==='SEMANA'?128560:536100);
+    h+='<div class="b" style="font-size:16px;color:'+C.dim+';letter-spacing:.06em;padding:12px 0 2px">'+(PERIODO==='SEMANA'?23:96)+' viajes</div>';
+    var jor=[['VIE 19 DE SEPTIEMBRE','5 viajes · 21:02 → 23:42 · '+clp(28420),true],['JUE 18 DE SEPTIEMBRE','9 viajes · 20:14 → 03:37 · '+clp(51870)],['MIÉ 17 DE SEPTIEMBRE','9 viajes · 21:05 → 02:48 · '+clp(48270)]];
+    jor.forEach(function(j){ h+=seccionAcento(j[0],j[1],C.brand,VIAJES.map(filaViaje).join(''),j[2]); });
+  }
+  document.getElementById('p1').innerHTML=h+'</div>';
+}
+function fichaViaje(i){
+  var v=VIAJES[i];
+  dialogo('Viaje de las '+v.h,'<p>'+(v.bruto>0?'Se ofertó '+clp(v.bruto):'Sin monto registrado')+' · '+esc(v.com)+'\nSi no se realizó, poné 0.</p><input class="inp" value="'+(v.real||v.bruto||'')+'" inputmode="numeric" style="margin-top:12px">',
+    [['Cancelar',null],['Guardar',function(){toast('Guardado (solo en esta réplica, no persiste)');}]]);
+}
+function verOferta(i){
+  var v=VIAJES[i];
+  dialogo('Oferta de las '+v.h,'<div style="height:220px;border-radius:12px;background:#000;display:flex;align-items:center;justify-content:center;color:#666;font-size:14px;text-align:center;padding:10px">[Aquí va la captura de la tarjeta de Uber.<br>No se publica en la réplica.]</div>'+
+   '<p style="margin-top:10px;color:'+C.txt+'">Ofertado '+clp(v.bruto)+'   ·   Cobrado '+clp(v.real)+'  ⚠ PAGARON '+clp(v.bruto-v.real)+' MENOS</p>'+
+   '<p style="margin-top:8px">Esta imagen incluye el nombre del pasajero, a propósito: es lo que permite confirmar que corresponde a este viaje. Para reclamarle a Uber está bien —ya lo conocen—; si la vas a enviar a otro lado, tápalo.</p>',
+   [['Borrar este viaje',function(){dialogo('¿Borrar este viaje?','<p>Se borra el registro y su foto. No se puede deshacer.</p>',[['Cancelar',null],['Borrar',nativo]]);}],['Cerrar',null]]);
+}
+
+/* ---------- ALERTAS ---------- */
+function chipPlazo(d){
+  var col=d<0?C.dim2:d<=2?C.malo:d<=5?C.brand:C.bueno; var urg=d>=0&&d<=2;
+  var t=d<0?'FUERA DE PLAZO':d===0?'VENCE HOY':d===1?'QUEDA 1 DÍA':'QUEDAN '+d+' DÍAS';
+  return '<span class="b" style="font-size:16px;letter-spacing:.08em;padding:4px 8px;border-radius:6px;'+(urg?'background:'+C.malo+';color:#151107':'background:'+C.surface2+';border:1px solid '+col+';color:'+col)+'">'+t+'</span>';
+}
+function tarjetaObjecion(o,i){
+  var falta=o.cobro-o.abono;
+  var det='<div style="display:none;padding:0 14px 14px">'+
+    '<div style="font-size:16px;color:'+C.dim2+'">Peaje cobrado por la concesionaria: '+clp(o.cobro)+'</div>'+
+    '<div style="font-size:16px;color:'+C.dim2+';padding-top:2px">Reembolso declarado por Uber: '+clp(o.abono)+'</div>'+
+    '<div style="background:'+C.surface2+';border-radius:12px;padding:10px 12px;margin-top:8px">'+o.cruces.map(function(c){
+      return '<div style="display:flex;font-size:17px;padding:4px 0"><span class="mono" style="color:'+C.dim+'">'+c[0]+'</span><span style="flex:1;color:'+C.dim2+'">  '+c[1]+'<br>  '+c[2]+'</span><span class="mono" style="color:'+C.dim2+'">'+clp(c[3])+'</span></div>';}).join('')+'</div>'+
+    '<button class="btn s2" style="margin-top:12px" onclick="toast(\'Copiado (simulado)\')">Copiar el comprobante</button>'+
+    '<div style="display:flex;gap:4px;margin-top:6px"><button class="btn s2" style="color:'+(o.reclamado?C.dim2:C.brand)+'" onclick="ALERTAS['+i+'].reclamado=ALERTAS['+i+'].reclamado?null:\'19 sept\';pintarAlertas()">'+(o.reclamado?'Deshacer':'Ya lo reclame')+'</button>'+
+    '<button class="btn" onclick="pedirReembolso()">Uber ya abono</button></div>'+
+    '<button class="btn s2" style="margin-top:6px;color:'+C.dim2+';font-size:17.5px" onclick="pedirMotivo()">No insisto mas</button></div>';
+  return '<div class="tarjeta" style="margin-top:10px"><div style="padding:14px 14px 12px;cursor:pointer" onclick="var d=this.nextElementSibling;var ab=d.style.display===\'block\';d.style.display=ab?\'none\':\'block\';this.querySelector(\'.fl\').textContent=ab?\'▸\':\'▾\'">'+
+    '<div style="display:flex;align-items:center;margin-bottom:8px"><div style="flex:1">'+chipPlazo(o.dias)+'</div><span class="fl" style="font-size:20px;color:'+C.brand+'">▸</span></div>'+
+    '<div style="display:flex"><span style="flex:1;font-size:18.5px;color:'+C.txt+'">'+o.fecha+'</span><span class="mono" style="font-size:20px;color:'+C.malo+'">'+clp(falta)+'</span></div>'+
+    '<div style="font-size:16.5px;color:'+C.dim2+';padding-top:3px">'+o.port+' portico(s) · '+o.aut+'</div>'+
+    '<div style="font-size:16.5px;color:'+C.dim+';padding-top:2px">La autopista cobro '+clp(o.cobro)+' · Uber abono '+clp(o.abono)+' · falta la diferencia</div>'+
+    '<div style="font-size:16.5px;color:'+(o.reclamado?C.info:C.brand)+';padding-top:4px">'+(o.reclamado?'◑ Reclamado el '+o.reclamado+' · esperando respuesta':'○ Sin reclamar · toca para ver el detalle')+'</div>'+
+    '</div>'+det+'</div>';
+}
+function pedirReembolso(){ dialogo('¿Cuánto abonó Uber?','<input class="inp" placeholder="Monto en pesos" inputmode="numeric">',[['Cancelar',null],['Guardar',function(){toast('Guardado (solo en esta réplica)');}]]); }
+function pedirMotivo(){
+  var m=['Uber rechazó el reclamo','Uber dijo que el viaje no existe','Se venció el plazo','Uber nunca respondió','No vale la pena por el monto','Otro'];
+  dialogo('¿Por qué no se recuperó?',m.map(function(x){return '<div style="padding:12px 0;font-size:18px;color:'+C.txt+';border-bottom:1px solid '+C.line+';cursor:pointer" onclick="cerrarDlg();toast(\'Caso cerrado (simulado)\')">'+x+'</div>';}).join(''),[['Cancelar',null]]);
+}
+function pintarAlertas(){
+  var abiertas=ALERTAS, porRec=abiertas.filter(function(o){return !o.reclamado;}), recl=abiertas.filter(function(o){return o.reclamado;});
+  var total=abiertas.reduce(function(s,o){return s+o.cobro-o.abono;},0);
+  var h='<div class="cuerpo"><div class="tituloP">Alertas</div><div style="margin-top:14px">'+
+    '<div class="tarjeta" style="padding:16px"><div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em">FALTA COBRAR</div>'+
+    '<div class="mono" style="font-size:35px;color:'+C.malo+'">'+clp(total)+'</div>'+
+    '<div style="font-size:17.5px;color:'+C.dim+'">'+abiertas.length+' caso(s) que todavía puedes reclamar · '+clp(8294)+' recuperados</div>'+
+    '<div class="b" style="font-size:17px;color:'+C.malo+';padding-top:6px">⚠ 1 vence en 2 días o menos</div></div>'+
+    '<div class="tarjeta" style="padding:14px 16px;margin-top:10px"><div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em">ESPERANDO EL COBRO DE LA AUTOPISTA</div>'+
+    '<div class="mono" style="font-size:30px;color:'+C.info+'">2</div><div style="font-size:16.5px;color:'+C.dim2+'">paso(s) por autopista que el GPS detectó y que la concesionaria todavía no publica. Puede tardar 72 horas. Cuando publique el cobro, si Uber no lo pagó, el caso se abre solo.</div>'+
+    '<div style="font-size:16.5px;color:'+C.dim2+';padding-top:6px">No es una deuda todavía: son pasos en espera. El detalle está más abajo, en «PASOS POR AUTOPISTA».</div></div>'+
+    '<div class="chips" style="margin-top:12px">'+[['Todos',null,3],['Esperando TAG','T',2],['Pago parcial','P',2],['No pagó','N',1]].map(function(c){
+      return '<button class="chip'+(FILTRO_AL===c[1]?' on':'')+'" onclick="FILTRO_AL='+(c[1]?'\''+c[1]+'\'':'null')+';pintarAlertas()">'+c[0]+'  '+c[2]+'</button>';}).join('')+'</div>';
+  var lista=function(arr){ return arr.map(function(o){return tarjetaObjecion(o,ALERTAS.indexOf(o));}).join(''); };
+  var fil=function(arr){ return arr.filter(function(o){ return !FILTRO_AL||FILTRO_AL==='T'?true:FILTRO_AL==='N'?o.abono===0:o.abono>0; }); };
+  if(fil(porRec).length) h+=seccionAcento('POR RECLAMAR  ·  '+fil(porRec).length,'Trabajo por hacer: presentar el reclamo en el chat de Uber.',C.brand,lista(fil(porRec)),true);
+  if(fil(recl).length) h+=seccionAcento('YA RECLAMADOS  ·  ESPERANDO QUE UBER ABONE  ·  '+fil(recl).length,'Siguen abiertos y siguen contando en el total: todavía no llega la plata. Cuando Uber abone, toca «Uber ya abonó» y escribe el monto.',C.info,lista(fil(recl)),true);
+  if(!abiertas.length) h+='<div style="font-size:17.5px;color:'+C.dim+'">✅ No queda ningún caso abierto.</div>';
+  var pasos='<div class="tarjeta pad"><div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em">PASOS POR AUTOPISTA</div>'+
+    [['Detectado por el GPS',2,C.brand,'Esperando que la autopista publique el cobro'],['Comparado con Uber',1,C.brand,'Ya se sabe qué reembolsó Uber esa semana'],['Comparado con Uber y autopista',6,C.bueno,'Con el cobro real: se puede reclamar']].map(function(f){
+      return '<div style="display:flex;padding:7px 0"><div style="flex:1"><div style="font-size:18px;color:'+C.txt+'">'+f[0]+'</div><div style="font-size:16px;color:'+C.dim2+'">'+f[3]+'</div></div><span class="mono" style="font-size:20px;color:'+f[2]+'">'+f[1]+'</span></div>';}).join('')+
+    '<div style="font-size:15.5px;color:'+C.dim+';letter-spacing:.1em;padding-top:10px">EN CURSO</div>'+
+    '<div style="padding:6px 0"><div class="mono" style="font-size:17px;color:'+C.txt+'">19 sept  23:05 – 23:16</div><div style="font-size:16.5px;color:'+C.dim2+'">3 pórtico(s) · Vespucio Sur + Américo Vespucio Oriente</div><div style="font-size:16.5px;color:'+C.brand+'">falta el cobro de la autopista · estimado ~'+clp(3052)+', no sirve para reclamar</div></div></div>';
+  var cobrados='<div class="tarjeta" style="padding:12px 16px">'+[['Viaje 03 sept 2026 · 22:48','+'+clp(1840)],['Viaje 29 ago 2026 · 00:12','+'+clp(921)]].map(function(r){
+    return '<div style="padding:8px 0;border-bottom:1px solid '+C.line+'"><div style="display:flex"><span style="flex:1;font-size:17.5px;color:'+C.txt+'">'+r[0]+'</span><span class="mono" style="color:'+C.bueno+';font-size:18px">'+r[1]+'</span></div><div style="font-size:16px;color:'+C.dim2+'">reclamado '+r[1].slice(1)+' · 2 pórtico(s) · cerrado 08 sept 2026 · 14:02</div></div>';}).join('')+'</div>';
+  var resumen='<div class="tarjeta pad">'+fila('Casos cerrados','14')+fila('Abiertos','3')+fila('Reclamado',clp(19880))+fila('Abonado por Uber',clp(8294),C.bueno)+fila('Sin recuperar',clp(11586),C.dim2)+'</div>';
+  var mas=pasos+seccionAcento('COBRADOS  ·  14  ·  '+clp(8294),'Plata que entró. Cada caso con su fecha de cierre y el monto abonado.',C.bueno,cobrados)+
+    seccionAcento('📒  RESUMEN DE LA GESTIÓN','Cuánto se reclamó, cuánto entró y cuánto falta.',C.titulo,resumen);
+  h+='<div style="margin-top:18px">'+colapsable('Ver más  ·  pasos, cobrados y resumen','<div style="font-size:16.5px;color:'+C.dim2+';padding:4px 4px 8px">Esto no es una alerta: es lo ya resuelto o en curso, para consultar cuando haga falta.</div>'+mas)+'</div>';
+  document.getElementById('p2').innerHTML=h+'</div></div>';
+}
+
+/* ---------- AUDITORÍA ---------- */
+function pintarAuditoria(){
+  var h='<div class="cuerpo"><div class="tituloP">Auditoría</div><div style="margin-top:14px">';
+  if(APP!=='UBER'){
+    h+='<div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em;padding-bottom:8px">Auditoría de '+nombreApp()+'</div><div style="font-size:17.5px;color:'+C.dim2+'">Todavía no sé leer el resumen de pagos de '+nombreApp()+', así que no puedo cruzarlo contra los peajes. Los viajes y los peajes de '+nombreApp()+' sí se están registrando — esto es solo el cruce contra lo que la plataforma dice haber pagado.</div>';
+    document.getElementById('p3').innerHTML=h+'</div></div>'; return;
+  }
+  h+='<div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em;padding-bottom:8px">PEAJES: LO COBRADO CONTRA LO QUE UBER PAGÓ</div>';
+  h+='<div class="chips">'+['Esta semana','08 sept','01 sept','25 ago'].map(function(t,i){return '<button class="chip'+(SEMANA===i?' on':'')+'" onclick="SEMANA='+i+';pintarAuditoria()">'+t+'</button>';}).join('')+'</div>';
+  h+='<div class="tarjeta" style="padding:14px 16px;margin-top:10px"><div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em">HISTORIAL DE DIFERENCIAS Y FALTANTES</div>'+
+    '<div class="mono" style="font-size:35px;color:'+C.brand+'">'+clp(5856)+'</div><div style="font-size:17.5px;color:'+C.dim+';padding-bottom:10px">sin cobrar en 3 viaje(s) · todo el historico descargado</div>'+
+    '<div style="display:flex;padding:6px 0"><span style="flex:1;font-size:17.5px;color:'+C.dim+'">Uber pago de menos<br>2 viaje(s) · promedio '+clp(1688)+'</span><span class="mono" style="font-size:19px;color:'+C.brand+'">'+clp(3376)+'</span></div>'+
+    '<div style="display:flex;padding:6px 0"><span style="flex:1;font-size:17.5px;color:'+C.dim+'">Uber no pago nada<br>1 viaje(s) · promedio '+clp(1780)+'</span><span class="mono" style="font-size:19px;color:'+C.malo+'">'+clp(1780)+'</span></div>'+
+    '<div style="font-size:16.5px;color:'+C.dim2+';padding-top:10px">Cada viaje se compara contra el cobro de la autopista, sin redondear: un faltante es un faltante aunque sea de $10. El peaje lo paga el pasajero y Uber lo traspasa, asi que ninguna corresponde asumirla.</div>'+
+    '<button class="btn s2" style="margin-top:12px" onclick="toast(\'Copiado: 3 viajes, '+clp(5856)+'.\')">Copiar el acumulado para reclamar</button></div>';
+  h+='<button class="btn s2" style="margin-top:10px" onclick="nativo()">⬇  Descargar informe completo</button>';
+  var emb='<div class="tarjeta" style="padding:16px"><div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em">VIAJES DE LA SEMANA</div><div class="mono" style="font-size:39px;padding:2px 0">41</div>'+
+    '<div style="font-size:17.5px;color:'+C.dim+';padding-bottom:12px">17 con pórtico detectado por MyMargin</div>'+
+    [['Uber pagó el peaje','13',C.bueno],['Pagó de menos · sin cobrar','2 · '+clp(3376),C.malo],['No pagó · sin cobrar','1 · '+clp(1780),C.malo],['Por confirmar · falta el extracto','1 · '+clp(921),C.brand],['Sin peaje','22',C.dim2],['Uber pagó y no vimos el cruce','2',C.dim2]].map(function(f){
+      return '<div style="display:flex;padding:7px 0"><span style="flex:1;font-size:18px;color:'+C.dim+'">'+f[0]+'</span><span class="mono" style="font-size:18.5px;color:'+f[2]+'">'+f[1]+'</span></div>';}).join('')+
+    '<div style="font-size:16.5px;color:'+C.dim2+';padding-top:10px">En 2 viaje(s) Uber reembolsó peaje que MyMargin no vio. No son reclamos: falta leer el portal de la concesionaria.</div>'+
+    '<div class="b" style="font-size:17.5px;color:'+C.malo+';padding-top:12px">Falta por cobrar '+clp(5156)+' en 3 viaje(s). El detalle para reclamar está en Alertas.</div></div>';
+  h+=seccionAcento('VIAJES DE LA SEMANA  ·  41','El conteo: cuántos viajes quedaron bien y cuántos mal.',C.brand,emb,true);
+  var vxv='<div class="tarjeta" style="padding:12px">'+[['17 sept 23:15','Pagó de menos',C.malo,clp(1766),ALERTAS[0].cruces],['14 sept 01:08','Uber no pagó',C.malo,clp(1780),ALERTAS[1].cruces],['16 sept 21:40','Cuadra',C.bueno,'✓',[['21:48','P6 Kennedy','Costanera Norte',1104]]]].map(function(v){
+    return '<div style="border-bottom:1px solid '+C.line+'"><div style="padding:9px 4px;cursor:pointer" onclick="togSig(this)"><div style="display:flex"><span style="font-size:18px;color:'+C.txt+';flex:1"><span style="color:'+v[2]+'">▸</span>  '+v[0]+'</span><span class="mono" style="font-size:18.5px;color:'+v[2]+'">'+v[3]+'</span></div><div style="font-size:16.5px;color:'+v[2]+';padding-left:22px">'+v[1]+'</div></div>'+
+    '<div style="display:none;padding:2px 0 8px 10px">'+v[4].map(function(c){return '<div style="display:flex;font-size:17px;padding:5px 0"><span class="mono" style="color:'+C.dim+'">'+c[0]+'</span><span style="flex:1;color:'+C.dim2+'">  '+c[1]+'<br>  '+c[2]+'</span><span class="mono" style="color:'+C.dim2+'">'+clp(c[3])+'</span></div>';}).join('')+
+    (v[2]===C.malo?'<div style="font-size:16.5px;color:'+C.malo+';padding-top:8px">Reclamable: '+v[3]+'. El caso con el detalle para pegar en el chat de Uber está en Alertas.</div>':'')+'</div></div>';}).join('')+'</div>';
+  h+='<div style="margin-top:14px">'+seccionAcento('VIAJE POR VIAJE  ·  TAG contra UBER','Falta por cobrar '+clp(3546)+' en 2 viaje(s). Toca uno para ver sus pórticos.',C.malo,vxv,true)+'</div>';
+  var sem='<div class="tarjeta" style="padding:14px 16px"><div style="font-size:17px;color:'+C.dim+'">15 sept – 21 sept</div>'+
+    [['Peajes en viaje de Uber',clp(21480),C.txt],['Uber reembolsó',clp(16324),C.txt],['Personal',clp(1780),C.dim2],['FALTA POR COBRAR',clp(5156),C.malo]].map(function(f){return '<div style="display:flex;padding-top:6px"><span style="flex:1;font-size:18px;color:'+C.dim+'">'+f[0]+'</span><span class="mono" style="font-size:18.5px;color:'+f[2]+'">'+f[1]+'</span></div>';}).join('')+
+    '<div style="font-size:16.5px;color:'+C.dim2+';padding-top:10px">Las autopistas cobraron más de lo que Uber reembolsó por peajes en viaje esa semana.</div>'+
+    '<div style="font-size:17px;color:'+C.brand+';padding:12px 0 4px;min-height:44px;cursor:pointer" onclick="togSig(this,\'▸  Ver los 7 cruces de la semana\',\'▾  Ocultar los 7 cruces de la semana\')">▸  Ver los 7 cruces de la semana</div>'+
+    '<div style="display:none;padding-top:10px"><div style="font-size:15.5px;color:'+C.dim+';letter-spacing:.1em;padding:8px 0 4px">EN VIAJE DE UBER — ESTO ES LO RECLAMABLE</div>'+
+    TRANSITOS.slice(0,5).map(function(t){return '<div style="display:flex;font-size:16.5px;padding:4px 0"><span class="mono" style="color:'+C.dim+'">'+t[0].replace(' sept','/09')+' '+t[1]+'</span><span style="flex:1;color:'+C.dim2+'">  '+t[2]+' · '+t[3]+(t[5]?'':' · pendiente')+'</span><span class="mono">'+clp(t[4])+'</span></div>';}).join('')+
+    '<div style="font-size:15.5px;color:'+C.dim+';letter-spacing:.1em;padding:8px 0 4px">PERSONAL — NO SE RECLAMA</div>'+
+    TRANSITOS.slice(5).map(function(t){return '<div style="display:flex;font-size:16.5px;padding:4px 0"><span class="mono" style="color:'+C.dim+'">'+t[0].replace(' sept','/09')+' '+t[1]+'</span><span style="flex:1;color:'+C.dim2+'">  '+t[2]+' · '+t[3]+'</span><span class="mono" style="color:'+C.dim2+'">'+clp(t[4])+'</span></div>';}).join('')+
+    '<div style="font-size:15.5px;color:'+C.dim+';letter-spacing:.1em;padding:14px 0 4px">PRUEBAS GUARDADAS</div><div style="font-size:16.5px;color:'+C.dim2+'">· Portal de Costanera Norte — leído 19/09<br>· Resumen semanal de Uber — bajado 19/09</div></div></div>';
+  h+='<div style="margin-top:14px">'+seccionAcento('LA SEMANA EN PLATA  ·  15/09 – 21/09','Lo que cobraron las autopistas contra lo que Uber reembolsó.',C.info,sem)+'</div>';
+  h+='<button class="btn s2" style="margin-top:10px" onclick="nativo()">⬇  Informe de esta semana</button>';
+  document.getElementById('p3').innerHTML=h+'</div></div>';
+}
+
+/* ---------- TAG ---------- */
+function pintarTag(){
+  var auts=['Costanera Norte','Vespucio Sur','Américo Vespucio Oriente','Vespucio Norte'];
+  var tr=TRANSITOS.filter(function(t){return !FILTRO_AUT||t[3]===FILTRO_AUT;});
+  var total=tr.reduce(function(s,t){return s+t[4];},0);
+  var h='<div class="cuerpo"><div class="tituloP">TAG</div><div style="margin-top:14px"><div class="chips">'+
+    '<button class="chip'+(FILTRO_AUT?'':' on')+'" onclick="FILTRO_AUT=null;pintarTag()">Todas</button>'+
+    auts.map(function(a){var c=a.indexOf('Oriente')>=0?'AVO':a; return '<button class="chip'+(FILTRO_AUT===a?' on':'')+'" onclick="FILTRO_AUT=\''+a+'\';pintarTag()">'+c+'</button>';}).join('')+'</div>';
+  h+='<div class="tarjeta" style="padding:16px;text-align:center"><div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em">PEAJES COBRADOS</div><div class="mono" style="font-size:35px;color:'+C.brand+'">'+clp(total)+'</div><div style="font-size:17.5px;color:'+C.dim+'">'+tr.length+' cruces · 2 viajes con peaje</div></div>';
+  h+='<div style="margin-top:8px">'+fila('Cruces leídos',String(tr.length))+fila('Atribuidos a un viaje','5')+fila('Sin viaje (traslado o uso propio)','2')+fila('Aún no facturados','2')+'</div>';
+  h+='<div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em;padding:14px 0 6px">VIAJES CON PEAJE</div>';
+  [['22:58 · 3 pórticos',clp(2946),'P3 La Florida › P5 Macul › Pórtico Príncipe de Gales',true],['23:42 · 2 pórticos',clp(1964),'P6 Kennedy › P2 Tobalaba',false]].map(function(v){
+    h+='<div class="tarjeta" style="padding:9px 14px;margin-top:8px"><div style="display:flex"><span style="flex:1;font-size:18px">'+v[0]+'</span><span class="mono" style="font-size:18px;color:'+C.brand+'">'+v[1]+'</span></div><div style="font-size:16.5px;color:'+C.dim2+'">'+v[2]+'</div>'+
+    (v[3]?'<div style="font-size:16.5px;color:'+C.brandDim+';padding-top:8px">⚠ en Alertas</div>':'<div style="font-size:17px;color:'+C.brand+';padding-top:10px;cursor:pointer" onclick="toast(\'Caso abierto en Alertas, con el detalle para reclamar.\')">Reclamar a Uber</div>')+'</div>';
+  });
+  h+='<div style="padding-top:14px"><div style="font-size:16px;color:'+C.dim+';letter-spacing:.12em;padding-bottom:6px">CRUCES POR RECORRIDO</div><div style="font-size:16px;color:'+C.dim2+';padding-bottom:8px">Agrupados por continuidad (15 min sin cruzar = otro recorrido). Toca uno para ver sus pórticos.</div>';
+  var recs=[['19 sept  23:48 – 23:55',tr.filter(function(t){return t[3]==='Costanera Norte';})],['19 sept  23:05 – 23:16',tr.filter(function(t){return t[0]==='19 sept'&&t[3]!=='Costanera Norte';})],['18 sept  20:02 – 20:07',tr.filter(function(t){return t[0]==='18 sept';})]];
+  recs.forEach(function(r){ if(!r[1].length) return; var s=r[1].reduce(function(a,t){return a+t[4];},0); var pend=r[1].some(function(t){return !t[5];});
+    var au=[]; r[1].forEach(function(t){ if(au.indexOf(t[3])<0) au.push(t[3]); });
+    h+='<div style="border-bottom:1px solid '+C.line+'"><div style="padding:9px 4px;cursor:pointer" onclick="var d=this.nextElementSibling;var ab=d.style.display===\'block\';d.style.display=ab?\'none\':\'block\';var f=this.querySelector(\'.f\');f.textContent=(ab?\'▸  \':\'▾  \')+f.textContent.slice(3)">'+
+      '<div style="display:flex"><span class="f" style="flex:1;font-size:18px">▸  '+r[0]+'</span><span class="mono" style="font-size:18.5px;color:'+C.brand+'">'+clp(s)+'</span></div>'+
+      '<div style="font-size:16.5px;color:'+C.dim2+';white-space:pre">     '+r[1].length+' pórtico'+(r[1].length===1?'':'s')+' · '+au.join(' + ')+(pend?' · pendiente':' · facturado')+'</div></div>'+
+      '<div style="display:none;padding:4px 0 8px 10px;background:#2A2113;border-radius:10px">'+r[1].map(function(t){return '<div style="display:flex;font-size:17px;padding:5px 0"><span class="mono" style="color:'+C.dim+'">'+t[1]+'</span><span style="flex:1;color:'+C.dim2+'">  '+t[2]+'<br>  '+t[3]+(t[5]?' · facturado':' · pendiente')+'</span><span class="mono" style="padding-right:8px">'+clp(t[4])+'</span></div>';}).join('')+'</div></div>';
+  });
+  document.getElementById('p4').innerHTML=h+'</div></div></div>';
+}
+
+/* ---------- AJUSTES ---------- */
+var MODO='MINUTO', ZONA=false;
+function filaAjuste(ic,t,e,fn){ return '<div onclick="'+fn+'" style="display:flex;align-items:center;padding:14px 16px;cursor:pointer"><span style="width:40px;font-size:24px">'+ic+'</span><div style="flex:1"><div class="b" style="font-size:20px">'+t+'</div><div style="font-size:17px;color:'+C.dim+';padding-top:2px">'+e+'</div></div><span style="font-size:25px;color:'+C.dim2+'">›</span></div>'; }
+function pintarAjustes(){
+  var sep='<div style="height:1px;background:'+C.line+';margin-left:56px"></div>';
+  var h='<div class="cuerpo"><div class="tituloP">Ajustes</div>';
+  h+='<div class="rotG">CUENTAS CONECTADAS</div><div class="tarjeta">'+filaAjuste('🚗','Uber','37 de 41 viajes contrastados',"abrirSub('uber')")+sep+
+    filaAjuste('🛤','Mis autopistas','4 de 11 conectadas',"abrirSub('autopistas')")+sep+filaAjuste('🚙','Patente del vehículo','AB·CD·12',"pedirPatente()")+'</div>';
+  h+='<div class="rotG">CÓMO SE CALCULA</div>';
+  var perfil='<div class="tarjeta pad">'+[['Viajes analizados','1.284'],['Tu espera típica entre viajes','9 min'],['3 de cada 4 esperas son menores a','17 min'],['Corte de jornada calculado','52 min',C.brand],['Sesiones de trabajo detectadas','143']].map(function(d){
+    return '<div style="display:flex;padding:4px 0"><span style="flex:1;font-size:17.5px;color:'+C.dim+'">'+d[0]+'</span><span class="mono" style="font-size:18px;color:'+(d[2]||C.txt)+'">'+d[1]+'</span></div>';}).join('')+
+    '<div style="font-size:16.5px;color:'+C.dim2+';padding:10px 0">Calculado con TUS viajes: si pasas más de 52 minutos sin tomar uno, cuando lo normal para ti son 9, se entiende que te desconectaste y empieza otra jornada.</div>'+
+    '<div style="font-size:15.5px;color:'+C.dim+';letter-spacing:.1em;padding:6px 0">TUS PAUSAS ENTRE VIAJES</div>'+
+    [['0-10',48],['10-20',31],['20-30',12],['30-52',7],['52-90',4]].map(function(b,i){return '<div style="display:flex;align-items:center;padding:2px 0"><span class="mono" style="width:56px;font-size:15.5px;color:'+C.dim2+'">'+b[0]+'</span><span style="height:12px;border-radius:3px;background:'+(i<4?C.brand:C.surface2)+';width:'+(b[1]*3)+'px"></span><span class="mono" style="font-size:15.5px;color:'+C.dim2+'">  '+b[1]+'</span></div>';}).join('')+
+    '<div style="font-size:16px;color:'+C.dim2+';padding-top:8px">En ámbar, las pausas en que se considera que seguías trabajando.</div></div>';
+  h+=colapsable('📊  Tu perfil de trabajo',perfil);
+  var voz='<div class="tarjeta pad"><div style="font-size:17.5px;color:'+C.dim+'">Cuando la app detecte que entraste a una autopista, te avisa por voz que quedó registrado. Así no tienes que mirar el teléfono manejando.</div>'+
+    '<label style="display:flex;align-items:center;padding-top:12px;font-size:18.5px"><span style="flex:1">Avisar por voz</span><input type="checkbox" checked style="width:22px;height:22px;accent-color:'+C.brand+'"></label>'+
+    '<div style="font-size:16px;color:'+C.dim+';padding-top:10px">Volumen <span class="mono" style="float:right">0.8</span></div><input type="range" min="0" max="1" step="0.1" value="0.8" style="width:100%;accent-color:'+C.brand+'">'+
+    '<button class="btn" style="margin-top:12px" onclick="nativo()">Probar el aviso</button></div>';
+  h+=colapsable('🔊  Aviso al pasar por un pórtico',voz);
+  h+='<div class="tarjeta pad" style="margin-top:12px">'+
+    '<div class="lbl" style="margin-top:10px">RENDIMIENTO DE TU AUTO (km por litro)</div><input class="inp" value="12">'+
+    '<div class="lbl" style="margin-top:10px">PRECIO BENCINA ($ por litro)</div><input class="inp" value="1290">'+
+    '<div class="lbl" style="margin-top:16px">VALIDAR LA OFERTA POR</div><div class="seg" style="margin-top:4px">'+
+    [['MINUTO','Minuto'],['KM','Km'],['MIXTO','Mixto']].map(function(m){return '<button class="'+(MODO===m[0]?'on':'')+'" onclick="MODO=\''+m[0]+'\';pintarAjustes();abrirColapsados()">'+m[1]+'</button>';}).join('')+'</div>'+
+    ((MODO!=='KM')?'<div class="b" style="font-size:18px;color:'+C.titulo+';padding:14px 0 2px">⏱  Por MINUTO</div><div class="lbl" style="margin-top:10px">Meta viaje BUENO ($/min)</div><input class="inp" value="280"><div class="lbl" style="margin-top:10px">Mínimo aceptable ($/min)</div><input class="inp" value="200">':'')+
+    ((MODO!=='MINUTO')?'<div class="b" style="font-size:18px;color:'+C.titulo+';padding:14px 0 2px">📏  Por KILÓMETRO (distancia total)</div><div class="lbl" style="margin-top:10px">Meta viaje BUENO ($/km)</div><input class="inp" value="650"><div class="lbl" style="margin-top:10px">Mínimo aceptable ($/km)</div><input class="inp" value="480">':'')+
+    '<div style="font-size:17px;color:'+C.dim+';margin-top:12px">En Mixto la oferta debe cumplir el mínimo por minuto Y por km. SII 2026: 15,25 % (fijada por ley).</div>'+
+    '<button class="btn" style="margin-top:14px" onclick="this.textContent=\'Guardado ✓\';var b=this;setTimeout(function(){b.textContent=\'Guardar configuración\'},1500)">Guardar configuración</button></div>';
+  h+='<div class="rotG">DÓNDE TRABAJAS</div>';
+  var comunas=['Las Condes','Providencia','Santiago','Ñuñoa','Vitacura','Lo Barnechea','La Reina','Macul','Estación Central','Pudahuel'];
+  var zona='<div class="tarjeta pad"><div style="font-size:17.5px;color:'+C.dim+'">Activa esto para que MyMargin solo evalúe la rentabilidad de viajes que TERMINAN en las comunas que marques. Los demás se marcan "fuera de zona" (azul).</div>'+
+    '<button class="btn '+(ZONA?'ok':'')+'" style="margin-top:12px" onclick="ZONA=!ZONA;pintarAjustes();abrirColapsados(\'📍\')">'+(ZONA?'● Zona activa — solo mis comunas':'Analizar TODAS las comunas (zona desactivada)')+'</button>'+
+    (ZONA?comunas.map(function(c,i){return '<label style="display:flex;align-items:center;gap:10px;font-size:20px;padding:6px 0"><input type="checkbox" '+(i<4?'checked':'')+' style="width:20px;height:20px;accent-color:'+C.brand+'">'+c+'</label>';}).join(''):'')+'</div>';
+  h+=colapsable('📍  Mis comunas',zona);
+  h+='<div class="rotG">TUS DATOS</div><div style="font-size:17px;color:'+C.dim+';padding:0 4px 10px">Todo vive en este teléfono. La app no envía tus viajes a ningún servidor.</div>';
+  var resp='<div class="tarjeta pad"><div style="font-size:17.5px;color:'+C.dim+'">Tus casos de reclamo y tus pasos por pórtico se copian solos a la carpeta Descargas, en «MyMarginEAT_respaldo.json». Ese archivo NO se borra si borras los datos de la app ni si la desinstalas — y es lo único que ningún portal te puede devolver: qué reclamaste, cuándo, y cuánto te pagaron.</div>'+
+    '<div style="font-size:17.5px;color:'+C.dim2+';padding-top:10px">Último respaldo: hoy 23:58</div>'+
+    '<button class="btn s2" style="margin-top:12px" onclick="nativo()">Guardar el respaldo ahora</button>'+
+    '<div style="font-size:17px;color:'+C.dim+';padding-top:14px">⚠ Las FOTOS de las ofertas no entran en ese archivo automático: pesan unos 15 MB y se copiarían enteras cada vez que cambia un caso. Son la prueba con la que reclamas y no se pueden volver a bajar de ninguna parte, así que guárdalas aparte — y hazlo SIEMPRE antes de desinstalar o cambiar de teléfono.</div>'+
+    '<button class="btn" style="margin-top:10px" onclick="nativo()">Guardar TODO, con las fotos</button>'+
+    '<div style="font-size:17px;color:'+C.dim+';padding-top:14px">¿Reinstalaste la app o borraste los datos? Trae el archivo de vuelta. Solo agrega lo que falte: nunca pisa un caso que ya tengas, así que puedes hacerlo las veces que quieras sin miedo.</div>'+
+    '<button class="btn s2" style="margin-top:10px" onclick="nativo()">Restaurar desde un respaldo</button></div>';
+  h+=colapsable('💾  Respaldo de tus casos',resp);
+  var mant='<div class="tarjeta pad"><div style="font-size:17.5px;color:'+C.dim+'">Borra el historial si quedaron viajes de prueba o datos incorrectos. Empieza limpio con la lectura ya corregida.</div>'+
+    '<button class="btn malo" style="margin-top:12px" onclick="borrarHist(this)">🗑 Borrar historial de viajes</button></div>';
+  h+=colapsable('🧹  Mantenimiento y borrado',mant);
+  h+='<div style="font-size:16px;color:'+C.dim+';text-align:center;padding:18px 0 6px">MyMargin 0.79.0-beta (133) · release · réplica web</div>';
+  document.getElementById('p5').innerHTML=h+'</div>';
+}
+function abrirColapsados(pref){ document.querySelectorAll('#p5 .colap>button').forEach(function(b){ if(pref?b.getAttribute('data-r').indexOf(pref)===0:false) togColap(b); }); }
+function borrarHist(b){ if(!b._c){ b._c=1; b.textContent='Toca de nuevo para CONFIRMAR el borrado'; setTimeout(function(){b._c=0;b.textContent='🗑 Borrar historial de viajes';},4000);} else { b._c=0; toast('Solo en la app Android'); b.textContent='🗑 Borrar historial de viajes'; } }
+function pedirPatente(){
+  dialogo('Patente del vehículo','<div style="font-size:19px;color:'+C.txt+';padding:6px 0">AB·CD·12  ·  desde 01/03/2026</div><div style="font-size:19px;color:'+C.txt+';padding:6px 0">ZZ·XX·99  ·  desde siempre</div>',
+   [['Cerrar',null],['Agregar cambio de auto',function(){ dialogo('Nuevo auto','<p>Los cruces de ANTES de esta fecha se van a poder atribuir a la patente anterior; los de DESPUÉS, a esta.</p><input class="inp" placeholder="Patente, ej: ABCD12" style="margin-top:10px;font-family:Work Sans"><input class="inp" placeholder="Desde qué fecha (dd-mm-aaaa)" style="margin-top:10px;font-family:Work Sans">',[['Cancelar',null],['Guardar',function(){toast('Guardado (solo en esta réplica)');}]]); }]]);
+}
+
+/* ---------- SUB-PANTALLAS (Activities) ---------- */
+var subs={};
+function crearSub(id,html){ var d=document.createElement('div'); d.className='sub'; d.id='sub_'+id; d.innerHTML=html; document.getElementById('phone').appendChild(d); subs[id]=d; }
+function abrirSub(id){ subs[id].classList.add('on'); subs[id].scrollTop=0; if(id==='bienvenida') pasoBienvenida(0); }
+function cerrarSub(id){ subs[id].classList.remove('on'); }
+
+/* Mis autopistas */
+var PORTALES=[
+  ['Costanera Norte','ok','✓ 24 cruces · el más nuevo del 18 sept · sesión cerrada · hace 3 h'],
+  ['Vespucio Norte','sin_novedad','✓ Datos actualizados · sin tránsitos nuevos · hace 3 h'],
+  ['Vespucio Sur','viejo','⏱ 12 cruces · el más nuevo del 2 sept (sin novedad hace 17 días) · sesión no confirmada · hace 3 h'],
+  ['Autopista Central',null,'Sin conectar'],
+  ['Américo Vespucio Oriente','falla','✕ no encontré tus tránsitos · hace 3 h'],
+  ['Túnel San Cristóbal','persona','⚠ hay que entrar a mano · hace 1 días'],
+  ['Autopista Nororiente','guardada','Conectada · clave guardada cifrada'],
+  ['Ruta 78 · Autopista del Sol',null,'Sin conectar'],['Ruta del Maipo',null,'Sin conectar'],['Autopista Santiago–Lampa',null,'Sin conectar'],['Acceso Vial Aeropuerto (AMB)',null,'Sin conectar']];
+function htmlAutopistas(){
+  var sano=function(e){return e==='ok'||e==='sin_novedad';};
+  return '<div class="volver"><button onclick="cerrarSub(\'autopistas\')">‹ Volver</button></div><div style="padding:18px 20px 28px"><div class="b" style="font-size:28px;color:var(--txt-b)">Mis autopistas</div>'+
+  '<div style="font-size:17px;color:var(--dim-b);padding:8px 0 20px;white-space:pre-line">Conecta cada autopista para ver TODOS tus peajes, incluidos los que todavía no llegan a la boleta.\n\nTus claves se guardan cifradas en este teléfono y no salen de acá. Puedes borrarlas cuando quieras.</div>'+
+  '<div style="background:var(--surface);border:1px solid var(--line);border-radius:14px">'+PORTALES.map(function(p,i){
+    var col=sano(p[1])?C.bueno:p[1]==='falla'?C.malo:p[1]==='guardada'?C.bueno:p[1]?C.brand:'var(--dim-b)';
+    var marca={ok:'✓',sin_novedad:'✓',viejo:'⏱',persona:'⚠',falla:'✕',guardada:'⟳'}[p[1]];
+    return (i?'<div style="height:1px;background:var(--line);margin-left:16px"></div>':'')+'<div style="display:flex;align-items:center;padding:14px 16px;cursor:pointer" onclick="nativo()"><div style="flex:1"><div class="b" style="font-size:19px;color:var(--txt-b)">'+p[0]+'</div><div style="font-size:16px;color:'+col+';padding-top:2px">'+p[2]+'</div></div>'+
+      (marca?'<span onclick="event.stopPropagation();nativo()" class="b" style="min-width:54px;min-height:48px;display:flex;align-items:center;justify-content:center;font-size:23px;color:'+(p[1]==='guardada'?C.brand:col)+';background:var(--surface2);border-radius:12px;border:1px solid '+(sano(p[1])?C.bueno:'var(--line)')+';margin-left:8px">'+marca+'</span>':'')+
+      '<span style="font-size:24px;color:var(--dim2-b);padding-left:10px">›</span></div>';}).join('')+'</div>'+
+  '<div style="font-size:18px;color:#E0705F;padding:22px 16px 16px;cursor:pointer" onclick="dialogo(\'¿Olvidar todas tus claves?\',\'<p>Se borran de este teléfono y no se pueden recuperar. Tendrás que entrar de nuevo a cada autopista.</p>\',[[\'Cancelar\',null],[\'Olvidar\',nativo]])">Olvidar todas mis claves</div></div>';
+}
+crearSub('autopistas',htmlAutopistas());
+
+/* Historial de Uber (WebView) */
+crearSub('uber','<div style="display:flex;flex-direction:column;height:100%"><div class="volver" style="position:static"><button onclick="cerrarSub(\'uber\')">‹ Volver</button></div>'+
+  '<div class="b" style="font-size:23px;color:var(--txt-b);padding:14px 16px 2px">Historial de Uber</div>'+
+  '<div style="font-size:17px;color:var(--dim-b);padding:0 16px 10px">Entra una sola vez con tu cuenta de Uber. La primera vez te llega un código por mensaje: escríbelo tú. Después la sesión queda abierta —aguanta incluso apagar el teléfono— y la app puede traer tus viajes sola.</div>'+
+  '<div style="font-size:16px;color:var(--brand);padding:0 16px 8px">Cuando veas tus ganancias o tu extracto en pantalla, toca «Guardar lo que veo».</div>'+
+  '<div style="flex:1;background:#fff;color:#555;display:flex;align-items:center;justify-content:center;text-align:center;font-size:14px;padding:20px">[Aquí la app muestra drivers.uber.com dentro de un WebView con la sesión del conductor. No se reproduce en la réplica.]</div>'+
+  '<div style="display:flex;gap:8px;background:var(--surface);padding:10px 12px 12px"><button class="btn" style="font-size:19px" onclick="nativo()">Sincronizar</button><button class="btn s2" style="font-size:19px;color:var(--dim-b)" onclick="nativo()">Extracto</button></div></div>');
+
+/* Bienvenida */
+var PASOS=[
+ ['MyMargin guarda las pruebas de tus viajes','Mientras manejas, te dice si una oferta conviene.\n\nY guarda la evidencia de cada viaje, para cuando tengas que reclamarle a Uber un pago que falta.','Empezar'],
+ ['Para leer las ofertas, necesita ver tu pantalla','Lee el monto, los minutos y los kilómetros de la tarjeta de Uber, y guarda una foto de la oferta que aceptaste.\n\nLas capturas se quedan en tu teléfono. No se suben a ningún servidor: tú decides cuáles compartir, y cuándo.\n\nNo se guarda la pantalla del código PIN ni tus conversaciones con el pasajero.','Dar permiso','Ahora no'],
+ ['Al terminar el turno, se sincroniza con Uber','La app compara lo que registró con lo que Uber declara haber pagado.\n\nUber no permite que otra app entre a su historial. Por eso el botón Sincronizar abre Uber, tú tocas "Ganancias", y la app lee lo que aparece en pantalla.\n\nSon unos segundos. Sin eso, tus viajes quedan con el monto estimado de la oferta y no se puede detectar un pago que falte.','Entendido'],
+ ['Tus peajes se traen de cada autopista','MyMargin entra a la oficina virtual de cada concesionaria con TU cuenta, la misma que usas tú, y baja tus cruces de pórtico.\n\nLa primera vez entras a mano, en el sitio de la concesionaria. Si quieres que después se sincronice sola, puedes guardar la clave: queda cifrada con el llavero del teléfono y no sale de aquí. Si prefieres no guardarla, la app conserva solo la sesión y tú entras cuando toque.\n\nSe conectan desde Ajustes › Mis autopistas.','Entendido'],
+ ['Qué se guarda, y por cuánto','Solo se guarda lo que sirve para probar: la foto de la oferta, la hora, la dirección, la duración y los montos.\n\nNo se guarda el código PIN del pasajero ni tus conversaciones con él. Nada se sube a internet.\n\nLas pruebas se borran dos semanas después de que el viaje quedó conciliado. Un viaje que estés reclamando no se borra hasta que lo cierres.\n\nPuedes borrar cualquier viaje cuando quieras, desde su ficha.','Acepto'],
+ ['Listo','Enciende MyMargin cuando empieces a manejar.\n\nEl borde de la pantalla se pinta con el veredicto de cada oferta: verde conviene, naranja límite, rojo no.\n\nHoy funciona con Uber. DiDi y Cabify vienen después.','Encender']];
+crearSub('bienvenida','<div id="bienv" style="min-height:100%;display:flex;flex-direction:column;padding:40px 24px 24px"></div>');
+function pasoBienvenida(i){
+  var p=PASOS[i];
+  document.getElementById('bienv').innerHTML='<div style="display:flex;gap:6px">'+PASOS.map(function(_,n){return '<div style="flex:1;height:4px;border-radius:3px;background:'+(n<=i?C.brand:'#2E3340')+'"></div>';}).join('')+'</div>'+
+   '<div style="font:700 27px Roboto,Arial,sans-serif;color:var(--txt-b);padding:26px 0 14px">'+p[0]+'</div>'+
+   '<div style="flex:1;font-size:19px;color:var(--dim-b);white-space:pre-line;line-height:1.35">'+p[1]+'</div>'+
+   '<button onclick="'+(i<PASOS.length-1?(i===1?'toast(\'Solo en la app Android\');':'')+'pasoBienvenida('+(i+1)+')':'cerrarSub(\'bienvenida\')')+'" style="margin-top:24px;width:100%;min-height:52px;border:0;border-radius:10px;background:var(--brand);color:#151107;font:700 20px Roboto,Arial,sans-serif;cursor:pointer">'+p[2]+'</button>'+
+   (p[3]?'<button onclick="pasoBienvenida('+(i+1)+')" style="margin-top:8px;width:100%;min-height:48px;border:0;background:transparent;color:var(--dim-b);font:18px Roboto,Arial,sans-serif;cursor:pointer">'+p[3]+'</button>':'');
+}
+
+/* arranque: primero la app, luego la pestaña recordada */
+var ini=parseInt(leerLocal('mm_pestana')||'0',10); if(!(ini>=0&&ini<6)) ini=0;
+irAPestana(ini);
+</script>
+</body>
+</html>
