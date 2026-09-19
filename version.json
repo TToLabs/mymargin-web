@@ -1,7 +1,7 @@
 {
-  "versionCode": 133,
-  "versionName": "0.79.0",
+  "versionCode": 134,
+  "versionName": "0.79.1",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "Ahora la app avisa cuando hay una versión nueva. Corrige la lectura de montos altos ($11.000 o más) que el OCR confundía.",
+  "notas": "Autopistas: si no hay tránsitos nuevos ahora dice 'Datos actualizados' en verde, ya no falla en rojo.",
   "obligatoria": false
 }
