@@ -1,7 +1,7 @@
 {
-  "versionCode": 134,
-  "versionName": "0.79.1",
+  "versionCode": 135,
+  "versionName": "0.79.2",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "Autopistas: si no hay tránsitos nuevos ahora dice 'Datos actualizados' en verde, ya no falla en rojo.",
+  "notas": "Corrige montos corridos de un viaje, AVO ya no sale en rojo si no hay tránsitos, nuevo aviso de actualización y menos avisos al encender.",
   "obligatoria": false
 }
