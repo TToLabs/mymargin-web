@@ -1,7 +1,7 @@
 {
-  "versionCode": 135,
-  "versionName": "0.79.2",
+  "versionCode": 136,
+  "versionName": "0.79.3",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "Corrige montos corridos de un viaje, AVO ya no sale en rojo si no hay tránsitos, nuevo aviso de actualización y menos avisos al encender.",
+  "notas": "Arregla ofertas descartadas por error del OCR en el nombre (credito/tarjeta mal leido). El historial de Uber ahora completa los montos de los ultimos 14 dias, no solo el dia en curso.",
   "obligatoria": false
 }
