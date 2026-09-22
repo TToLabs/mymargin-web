@@ -1,7 +1,7 @@
 {
-  "versionCode": 136,
-  "versionName": "0.79.3",
+  "versionCode": 137,
+  "versionName": "0.79.4",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "Arregla ofertas descartadas por error del OCR en el nombre (credito/tarjeta mal leido). El historial de Uber ahora completa los montos de los ultimos 14 dias, no solo el dia en curso.",
+  "notas": "El aviso de actualizacion ahora muestra el % de descarga, igual que Rumbo.",
   "obligatoria": false
 }
