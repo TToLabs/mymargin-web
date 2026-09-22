@@ -1,7 +1,7 @@
 {
-  "versionCode": 137,
-  "versionName": "0.79.4",
+  "versionCode": 138,
+  "versionName": "0.79.5",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "El aviso de actualizacion ahora muestra el % de descarga, igual que Rumbo.",
+  "notas": "Aviso cuando Android apaga solo la captura, y arregla fotos/textos de otra oferta pegados a un viaje (nombre del pasajero cruzado).",
   "obligatoria": false
 }
