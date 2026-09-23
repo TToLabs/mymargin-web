@@ -1,7 +1,7 @@
 {
-  "versionCode": 138,
-  "versionName": "0.79.5",
+  "versionCode": 139,
+  "versionName": "0.79.6",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "Aviso cuando Android apaga solo la captura, y arregla fotos/textos de otra oferta pegados a un viaje (nombre del pasajero cruzado).",
+  "notas": "Un pago de Uber ya no se le pega a un viaje distinto cuando no calza con lo ofertado.",
   "obligatoria": false
 }
