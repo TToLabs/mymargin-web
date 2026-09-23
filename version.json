@@ -1,7 +1,7 @@
 {
-  "versionCode": 139,
-  "versionName": "0.79.6",
+  "versionCode": 140,
+  "versionName": "0.79.7",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "Un pago de Uber ya no se le pega a un viaje distinto cuando no calza con lo ofertado.",
+  "notas": "Deja registro cuando una oferta vista se pierde sola sin confirmarse, para diagnosticar viajes que no se guardan.",
   "obligatoria": false
 }
