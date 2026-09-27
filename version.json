@@ -1,7 +1,7 @@
 {
-  "versionCode": 141,
-  "versionName": "0.79.8",
+  "versionCode": 142,
+  "versionName": "0.79.9",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc141: rescate de ofertas ignoradas por nombre completo + similitud de Levenshtein (>=0.75), en vez de match exacto por prefijo. Corrige cruces reales (Javiera<->Santiago, Sebastian<->Joaquin) y la extraccion de nombres compuestos truncados a la ultima palabra.",
+  "notas": "vc142: rellena el nombre del pasajero de una oferta ignorada si el primer frame no lo pudo leer (caso real 'Carla': el overlay 'Buscando coincidencias' de Uber tapaba la linea de pago justo cuando el resto de la pantalla ya tenia mas texto reconocido, y ese era el frame que ganaba la foto).",
   "obligatoria": false
 }
