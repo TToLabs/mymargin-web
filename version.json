@@ -1,7 +1,7 @@
 {
-  "versionCode": 140,
-  "versionName": "0.79.7",
+  "versionCode": 141,
+  "versionName": "0.79.8",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "Deja registro cuando una oferta vista se pierde sola sin confirmarse, para diagnosticar viajes que no se guardan.",
+  "notas": "vc141: rescate de ofertas ignoradas por nombre completo + similitud de Levenshtein (>=0.75), en vez de match exacto por prefijo. Corrige cruces reales (Javiera<->Santiago, Sebastian<->Joaquin) y la extraccion de nombres compuestos truncados a la ultima palabra.",
   "obligatoria": false
 }
