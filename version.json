@@ -1,7 +1,7 @@
 {
-  "versionCode": 142,
-  "versionName": "0.79.9",
+  "versionCode": 143,
+  "versionName": "0.80.0",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc142: rellena el nombre del pasajero de una oferta ignorada si el primer frame no lo pudo leer (caso real 'Carla': el overlay 'Buscando coincidencias' de Uber tapaba la linea de pago justo cuando el resto de la pantalla ya tenia mas texto reconocido, y ese era el frame que ganaba la foto).",
+  "notas": "vc143: el extracto semanal de Uber se baja solo una vez al dia (antes solo a mano), para que el cruce de peajes contra lo que Uber reembolso no quede desactualizado. AVISO: el click automatico al boton 'Descargar PDF' dentro de un WebView invisible no esta validado en terreno todavia - revisar el log 'extracto uber' al dia siguiente.",
   "obligatoria": false
 }
