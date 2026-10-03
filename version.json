@@ -1,7 +1,7 @@
 {
-  "versionCode": 143,
-  "versionName": "0.80.0",
+  "versionCode": 144,
+  "versionName": "0.80.1",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc143: el extracto semanal de Uber se baja solo una vez al dia (antes solo a mano), para que el cruce de peajes contra lo que Uber reembolso no quede desactualizado. AVISO: el click automatico al boton 'Descargar PDF' dentro de un WebView invisible no esta validado en terreno todavia - revisar el log 'extracto uber' al dia siguiente.",
+  "notas": "vc144: fotos de oferta mas nitidas (75% del tamano, JPEG 85, difuminado de privacidad ajustado). DiDi: la comuna escrita como '8320000 Santiago' ya se lee como Santiago Centro y deja de marcarse fuera de zona.",
   "obligatoria": false
 }
