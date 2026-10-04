@@ -1,7 +1,7 @@
 {
-  "versionCode": 145,
-  "versionName": "0.80.2",
+  "versionCode": 146,
+  "versionName": "0.80.3",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc145: arreglo del extracto semanal automatico de Uber (agrega el receptor de descarga que faltaba, reintenta 20 s buscando el boton y usa una ventana 1x1). SIN VALIDAR en terreno todavia: revisar el log MYMARGINEAT_UBER.",
+  "notas": "vc146: DiDi lee el nombre del pasajero de la linea 'Nombre 4,96 519 viajes' (antes tomaba 'bancaria' del banner 'Tarjeta bancaria verificada' y el viaje quedaba en cero sin foto). SIN VALIDAR en terreno: telefono no conectado.",
   "obligatoria": false
 }
