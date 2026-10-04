@@ -1,7 +1,7 @@
 {
-  "versionCode": 144,
-  "versionName": "0.80.1",
+  "versionCode": 145,
+  "versionName": "0.80.2",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc144: fotos de oferta mas nitidas (75% del tamano, JPEG 85, difuminado de privacidad ajustado). DiDi: la comuna escrita como '8320000 Santiago' ya se lee como Santiago Centro y deja de marcarse fuera de zona.",
+  "notas": "vc145: arreglo del extracto semanal automatico de Uber (agrega el receptor de descarga que faltaba, reintenta 20 s buscando el boton y usa una ventana 1x1). SIN VALIDAR en terreno todavia: revisar el log MYMARGINEAT_UBER.",
   "obligatoria": false
 }
