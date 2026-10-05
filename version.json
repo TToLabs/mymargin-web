@@ -1,7 +1,7 @@
 {
-  "versionCode": 146,
-  "versionName": "0.80.3",
+  "versionCode": 147,
+  "versionName": "0.80.4",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc146: DiDi lee el nombre del pasajero de la linea 'Nombre 4,96 519 viajes' (antes tomaba 'bancaria' del banner 'Tarjeta bancaria verificada' y el viaje quedaba en cero sin foto). SIN VALIDAR en terreno: telefono no conectado.",
+  "notas": "vc147: arregla el respaldo automatico de viajes, que llevaba ~28 dias sin guardar nada (los 32 nombres de Descargas estaban ocupados por la instalacion anterior). Ahora recuerda su archivo y, si el nombre esta ocupado, usa uno con fecha. SIN VALIDAR en el telefono todavia.",
   "obligatoria": false
 }
