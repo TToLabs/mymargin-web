@@ -1,7 +1,7 @@
 {
-  "versionCode": 147,
-  "versionName": "0.80.4",
+  "versionCode": 148,
+  "versionName": "0.80.5",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc147: arregla el respaldo automatico de viajes, que llevaba ~28 dias sin guardar nada (los 32 nombres de Descargas estaban ocupados por la instalacion anterior). Ahora recuerda su archivo y, si el nombre esta ocupado, usa uno con fecha. SIN VALIDAR en el telefono todavia.",
+  "notas": "vc148: DiDi lee el nombre aunque el OCR pierda la coma de la calificacion, y 'Pon Precio' / direcciones ya no se toman como nombre (en la jornada del 4-oct dejaron 3 de 31 viajes en cero). Con nombres legibles la guarda frena pruebas de otra persona (Jeannete/Constanza, Antonia/Juan). SIN VALIDAR en terreno con una oferta real.",
   "obligatoria": false
 }
