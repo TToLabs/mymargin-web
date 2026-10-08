@@ -1,7 +1,7 @@
 {
-  "versionCode": 148,
-  "versionName": "0.80.5",
+  "versionCode": 150,
+  "versionName": "0.80.7",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc148: DiDi lee el nombre aunque el OCR pierda la coma de la calificacion, y 'Pon Precio' / direcciones ya no se toman como nombre (en la jornada del 4-oct dejaron 3 de 31 viajes en cero). Con nombres legibles la guarda frena pruebas de otra persona (Jeannete/Constanza, Antonia/Juan). SIN VALIDAR en terreno con una oferta real.",
+  "notas": "vc150: MyMargin se abre sola y pide encender el auditor cuando abres Uber (probado en terreno), DiDi o Cabify (sin probar); avisa al abrir la app si falta activar la accesibilidad. Incluye el arreglo del cobro duplicado cuando la tarjeta de Uber se lee dos veces (probado solo con tests, sin validar en terreno). Despues de instalar hay que encender el Auditor.",
   "obligatoria": false
 }
