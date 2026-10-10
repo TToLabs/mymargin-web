@@ -1,7 +1,7 @@
 {
-  "versionCode": 150,
-  "versionName": "0.80.7",
+  "versionCode": 154,
+  "versionName": "0.80.11",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc150: MyMargin se abre sola y pide encender el auditor cuando abres Uber (probado en terreno), DiDi o Cabify (sin probar); avisa al abrir la app si falta activar la accesibilidad. Incluye el arreglo del cobro duplicado cuando la tarjeta de Uber se lee dos veces (probado solo con tests, sin validar en terreno). Despues de instalar hay que encender el Auditor.",
+  "notas": "vc154 (SIN PROBAR en terreno): nuevo diseno formal con tema dia y noche automatico, opcion Fijo o Automatico en Ajustes, nombre MarginTech Driver, icono 3D nuevo, splash con progreso, selector de DiDi y Cabify corregido y pausa del auditor al desconectarse. Si falla al abrir, reinstalar la vc150 por cable. Despues de instalar hay que encender el Auditor.",
   "obligatoria": false
 }
