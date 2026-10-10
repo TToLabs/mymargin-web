@@ -1,7 +1,7 @@
 {
-  "versionCode": 156,
-  "versionName": "0.80.13",
+  "versionCode": 157,
+  "versionName": "0.80.14",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc156: rediseno formal azul marino en toda la app, dia y noche. Encabezado fijo con logo y menu de ajustes (boton de tres lineas arriba a la derecha). Barra inferior con 5 pestanas. Inicio con BRUTO y LIQUIDA lado a lado. Monto total reclamable destacado en Auditoria. Pantallas de Uber, autopistas y portales con la misma paleta. SIN PROBAR en el telefono: verificar que abre. Despues de instalar hay que encender el Auditor.",
+  "notas": "vc157: nuevo formato formal gris grafito con verde, tipografia Montserrat, encabezado fijo con logo y menu de ajustes (tres lineas arriba a la derecha) con una pantalla por opcion. Icono nuevo. Barra de avance al sincronizar. Botones con reaccion al tocar. Boton Apagar Auditor. Texto de reclamo corregido: Solicitud de pago pendiente, sin nombrar la app. SIN PROBAR en el telefono: si no abre, reinstalar la v0.80.13 desde github.com/TToLabs/mymargin-web/releases/tag/v0.80.13. Despues de instalar hay que encender el Auditor.",
   "obligatoria": false
 }
