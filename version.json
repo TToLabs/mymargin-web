@@ -1,7 +1,7 @@
 {
-  "versionCode": 155,
-  "versionName": "0.80.12",
+  "versionCode": 156,
+  "versionName": "0.80.13",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc155: nuevo diseno formal con tema dia y noche (probado en telefono real: abre y se ve bien en ambos modos), opcion Automatico, Claro o Oscuro en Ajustes, nombre MarginTech Driver, icono 3D, splash con progreso, selector de DiDi y Cabify corregido. Corrige el cierre al abrir de la vc154. SIN PROBAR en terreno: pausa del auditor al desconectarse. Las pantallas de Uber, autopistas y portales siguen con la paleta oscura antigua. Despues de instalar hay que encender el Auditor.",
+  "notas": "vc156: rediseno formal azul marino en toda la app, dia y noche. Encabezado fijo con logo y menu de ajustes (boton de tres lineas arriba a la derecha). Barra inferior con 5 pestanas. Inicio con BRUTO y LIQUIDA lado a lado. Monto total reclamable destacado en Auditoria. Pantallas de Uber, autopistas y portales con la misma paleta. SIN PROBAR en el telefono: verificar que abre. Despues de instalar hay que encender el Auditor.",
   "obligatoria": false
 }
