@@ -1,7 +1,7 @@
 {
-  "versionCode": 157,
-  "versionName": "0.80.14",
+  "versionCode": 158,
+  "versionName": "0.80.15",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc157: nuevo formato formal gris grafito con verde, tipografia Montserrat, encabezado fijo con logo y menu de ajustes (tres lineas arriba a la derecha) con una pantalla por opcion. Icono nuevo. Barra de avance al sincronizar. Botones con reaccion al tocar. Boton Apagar Auditor. Texto de reclamo corregido: Solicitud de pago pendiente, sin nombrar la app. SIN PROBAR en el telefono: si no abre, reinstalar la v0.80.13 desde github.com/TToLabs/mymargin-web/releases/tag/v0.80.13. Despues de instalar hay que encender el Auditor.",
+  "notas": "vc158: letra Roboto (como WhatsApp y Waze) mas formal en titulos. Corrige montos BRUTO y LIQUIDA cortados, linea doble en viajes, pildora de la barra inferior y logo del encabezado mas grande. Grafito con verde, menu de ajustes con pantalla por opcion, boton Apagar Auditor, barra de avance al sincronizar, texto de reclamo Solicitud de pago pendiente. Si falla, reinstalar la v0.80.14 desde github.com/TToLabs/mymargin-web/releases/tag/v0.80.14. Despues de instalar hay que encender el Auditor.",
   "obligatoria": false
 }
