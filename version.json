@@ -1,7 +1,7 @@
 {
-  "versionCode": 161,
-  "versionName": "0.80.18",
+  "versionCode": 162,
+  "versionName": "0.80.19",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc161: minutos de recogida en el cartel con su color (verde hasta 3, naranja hasta 5, rojo hasta 10). Corrige el nombre del pasajero cuando el OCR lee el logo de Uber como ber (viaje quedaba en cero). Cruce de tarjetas Ultimo viaje corregido, registro de tarjetas sin dueno y de borrados, candado al guardar viajes. Icono grafito y cartel de actualizar igual al de Rumbo. Si falla, reinstalar la v0.80.15 desde github.com/TToLabs/mymargin-web/releases/tag/v0.80.15. Despues de instalar hay que encender el Auditor.",
+  "notas": "vc162: boton Evaluar con dinamica en Ajustes, Configuracion (activado por defecto: igual que antes; desactivado: descuenta la dinamica incluida al evaluar y el cartel dice sin din.). No cambia lo que se guarda ni los reclamos. Si falla, reinstalar la v0.80.18 desde github.com/TToLabs/mymargin-web/releases/tag/v0.80.18. Despues de instalar hay que encender el Auditor.",
   "obligatoria": false
 }
