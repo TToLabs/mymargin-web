@@ -1,7 +1,7 @@
 {
-  "versionCode": 162,
-  "versionName": "0.80.19",
+  "versionCode": 163,
+  "versionName": "0.80.20",
   "apkUrl": "https://github.com/TToLabs/mymargin-web/releases/download/latest/mymargin-beta.apk",
-  "notas": "vc162: boton Evaluar con dinamica en Ajustes, Configuracion (activado por defecto: igual que antes; desactivado: descuenta la dinamica incluida al evaluar y el cartel dice sin din.). No cambia lo que se guarda ni los reclamos. Si falla, reinstalar la v0.80.18 desde github.com/TToLabs/mymargin-web/releases/tag/v0.80.18. Despues de instalar hay que encender el Auditor.",
+  "notas": "vc163: ultima version publicada en TToLabs. Desde aqui la app busca actualizaciones en BTo Innova. Solo registro interno de version y GPS; no cambia lecturas ni decisiones.",
   "obligatoria": false
 }
